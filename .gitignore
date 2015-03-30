@@ -1,0 +1,7 @@
+*.pdb
+HE.Test/obj/
+HE.Gui/bin/
+HE.Gui/obj/
+HE.Logic/bin/
+HE.Logic/obj/
+HE.Test/bin/
