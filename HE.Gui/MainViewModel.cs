@@ -3,9 +3,12 @@ using System.Data;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
+using ExampleLibrary;
 using ExpressionEvaluator;
 using HE.Logic;
 using Microsoft.TeamFoundation.MVVM;
+using OxyPlot;
+using OxyPlot.Axes;
 
 namespace HE.Gui
 {
@@ -28,6 +31,8 @@ namespace HE.Gui
 
         public DataView LastLayer { get; set; }
 
+        public PlotModel MatrixModel { get; set; }
+
         public MainViewModel()
         {
             CalculateCommand = new RelayCommand(Calculate);
@@ -41,6 +46,33 @@ namespace HE.Gui
             RightBoundaryCondition = "0.0";
             InitialCondition = "0.0";
             Function = "0.0";
+            InitMatrixModel();
+        }
+
+        private void InitMatrixModel()
+        {
+            MatrixModel = new PlotModel();
+            var plotModel1 = MatrixModel;
+            var linearAxis1 = new LinearAxis();
+            linearAxis1.EndPosition = 0;
+            linearAxis1.StartPosition = 1;
+            plotModel1.Axes.Add(linearAxis1);
+            var linearAxis2 = new LinearAxis();
+            linearAxis2.Position = AxisPosition.Bottom;
+            plotModel1.Axes.Add(linearAxis2);
+            var matrixSeries1 = new MatrixSeries();
+            matrixSeries1.ShowDiagonal = true;
+            matrixSeries1.Matrix = new Double[3, 3];
+            matrixSeries1.Matrix[0, 0] = 1;
+            matrixSeries1.Matrix[0, 1] = 0;
+            matrixSeries1.Matrix[0, 2] = 0;
+            matrixSeries1.Matrix[1, 0] = 0;
+            matrixSeries1.Matrix[1, 1] = 2;
+            matrixSeries1.Matrix[1, 2] = 0;
+            matrixSeries1.Matrix[2, 0] = 0;
+            matrixSeries1.Matrix[2, 1] = 0;
+            matrixSeries1.Matrix[2, 2] = 3;
+            plotModel1.Series.Add(matrixSeries1);
         }
 
         private void PopulateSecondExample()

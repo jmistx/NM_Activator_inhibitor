@@ -2,6 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:oxy="http://oxyplot.org/wpf" 
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         Title="MainWindow" Height="841.798" Width="677.703"
         xmlns:gui="clr-namespace:HE.Gui"
@@ -15,55 +16,89 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0">
-                <DataGrid IsReadOnly="True" ItemsSource="{Binding LastLayer}"></DataGrid>
-            </StackPanel>
+            <TabControl>
+                <TabItem Header="Табличный послойный вывод">
+                    <DataGrid IsReadOnly="True" ItemsSource="{Binding LastLayer}"></DataGrid>
+                </TabItem>    
+                <TabItem Header="Графическое представление">
+                    <oxy:PlotView Model="{Binding MatrixModel}">
+                    </oxy:PlotView>
+                </TabItem>
+                <TabItem Header="Норма разности на слое">
+
+                </TabItem>
+            </TabControl>
+            
             <WrapPanel Grid.Row="1">
                 <Button Command="{Binding CalculateCommand}">Рассчитать</Button>
                 <Separator></Separator>
                 <Button Command="{Binding PopulateFirstExampleCommand}">Тестовый пример 1</Button>
                 <Button Command="{Binding PopulateSecondExampleCommand}">Тестовый пример 2</Button>
             </WrapPanel>
-            <StackPanel Grid.Row="2">
-                <Label>Параметры:</Label>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="118" />
-                        <ColumnDefinition Width="145*" />
-                    </Grid.ColumnDefinitions>
-                    <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Source="res\Eq1.gif"></Image>
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">λ1</Label>
-                    <TextBox Grid.Column="1" Grid.Row="1"  Text="{Binding RightBoundary}"/>
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="2" Grid.ColumnSpan="2">λ2</Label>
-                    <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding LeftBoundaryCondition}"/>
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="3" Grid.ColumnSpan="2">ρ</Label>
-                    <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding RightBoundaryCondition}"/>
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="4" Grid.ColumnSpan="2">κ</Label>
-                    <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding InitialCondition}" />
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="5" Grid.ColumnSpan="2">γ</Label>
-                    <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Function}" />
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="6" Grid.ColumnSpan="2">ν</Label>
-                    <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding EndTime}"/>
-                    <Label Grid.Column="0" FontSize="18" Grid.Row="7" Grid.ColumnSpan="2">c</Label>
-                    <TextBox Grid.Column="1" Grid.Row="7"  Text="{Binding NumberOfSpaceIntervals}"/>
-                    <Label Grid.Column="0" FontSize="12" Grid.Row="8" Grid.ColumnSpan="2">Разбиений по T</Label>
-                    <TextBox Grid.Column="1" Grid.Row="8" Text="{Binding NumberOfTimeIntervals}"/>
-                </Grid>
-                <Separator></Separator>
+            <TabControl Grid.Row="2">
+                <TabItem Header="Параметры уравнения">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="118" />
+                                <ColumnDefinition Width="145" />
+                            </Grid.ColumnDefinitions>
+                            <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Source="res\Eq1.gif"></Image>
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">λ1</Label>
+                            <TextBox Grid.Column="1" Grid.Row="1"  Text="{Binding RightBoundary}"/>
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="2" Grid.ColumnSpan="2">λ2</Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding LeftBoundaryCondition}"/>
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="3" Grid.ColumnSpan="2">ρ</Label>
+                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding RightBoundaryCondition}"/>
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="4" Grid.ColumnSpan="2">κ</Label>
+                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding InitialCondition}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="5" Grid.ColumnSpan="2">γ</Label>
+                            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Function}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="6" Grid.ColumnSpan="2">ν</Label>
+                            <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding EndTime}"/>
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="7" Grid.ColumnSpan="2">c</Label>
+                            <TextBox Grid.Column="1" Grid.Row="7"  Text="{Binding NumberOfSpaceIntervals}"/>
+                        </Grid>
+                    </StackPanel>
 
-            </StackPanel>
-
+                </TabItem>
+                <TabItem Header="Параметры решения">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="180"/>
+                                <ColumnDefinition Width="150"/>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" FontSize="12" Grid.Row="0">Разбиений по времени</Label>
+                            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding NumberOfTimeIntervals}"/>
+                            <Label Grid.Column="0" FontSize="12" Grid.Row="1">Шаг по времени</Label>
+                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding NumberOfTimeIntervals}"/>
+                            <Label Grid.Column="0" FontSize="12" Grid.Row="2">Разбиений по пространству</Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding NumberOfTimeIntervals}"/>
+                            <Label Grid.Column="0" FontSize="12" Grid.Row="3">Конечный момент T</Label>
+                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding NumberOfTimeIntervals}"/>
+                        </Grid>
+                    </StackPanel>
+                </TabItem>
+            </TabControl>
+           
         </Grid>
     </Grid>
 </Window>
