@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivatorEquationSolverShould.cs" />
     <Compile Include="EquationSolverShould.cs" />
     <Compile Include="Expect.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

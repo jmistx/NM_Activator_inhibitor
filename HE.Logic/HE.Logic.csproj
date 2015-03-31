@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivatorEquationSolver.cs" />
     <Compile Include="EquationSolveAnswer.cs" />
     <Compile Include="HeatEquationSolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
