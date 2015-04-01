@@ -77,69 +77,51 @@
 
                 </TabItem>
                 <TabItem Header="Параметры решения">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180" />
-                                <ColumnDefinition Width="150" />
-                            </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" FontSize="12" Grid.Row="1">Шаг по времени</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TimeStep}" />
-                            <Label Grid.Column="0" FontSize="12" Grid.Row="2">Разбиений по пространству</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding IntervalsX}" />
-                            <Label Grid.Column="0" FontSize="12" Grid.Row="3">Конечный момент T</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding EndMomentT}" />
-                        </Grid>
-                    </StackPanel>
-                </TabItem>
-                <TabItem Header="Начальные условия">
-
-                    <ListView ItemsSource="{Binding InitialCondition}">
-                        <!--                        <DataTemplate x:Name="inputTemplate">-->
-                        <!--                            <TextBox>-->
-                        <!--                                <TextBox.Text>-->
-                        <!--                                    <Binding />-->
-                        <!--                                </TextBox.Text>-->
-                        <!--                            </TextBox>-->
-                        <!--                        </DataTemplate>-->
-                        <!--                        <ListBox.ItemTemplate>-->
-                        <!--                            <DataTemplate>-->
-                        <!--                                <DockPanel>-->
-                        <!--                                    <Label>-->
-                        <!--                                        <Binding Path="Index"></Binding>-->
-                        <!--                                    </Label>-->
-<!--                        <TextBox>-->
-<!--                            <TextBox.Text>-->
-<!--                                <Binding Path="Value" />-->
-<!--                            </TextBox.Text>-->
-<!--                        </TextBox>-->
-                        <!---->
-                        <!--                                </DockPanel>-->
-                        <!--                            </DataTemplate>-->
-                        <!--                        </ListBox.ItemTemplate>-->
-                        <ListView.View>
-                            <GridView >
-                                <GridViewColumn Header="Индекс гармоники" DisplayMemberBinding="{Binding Path=Index}" />
-                                <GridViewColumn Header="Коэффициент">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox>
-                                                <TextBox.Text>
-                                                    <Binding Path="Value"/>
-                                                </TextBox.Text>
-                                            </TextBox>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="180" />
+                                    <ColumnDefinition Width="150" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" FontSize="12" Grid.Row="1">Шаг по времени</Label>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TimeStep}" />
+                                <Label Grid.Column="0" FontSize="12" Grid.Row="2">Разбиений по пространству</Label>
+                                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding IntervalsX}" />
+                                <Label Grid.Column="0" FontSize="12" Grid.Row="3">Конечный момент T</Label>
+                                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding EndMomentT}" />
+                            </Grid>
+                        </StackPanel>
+                        <ListView ItemsSource="{Binding InitialCondition}" Grid.Column="1">
+                            <ListView.View>
+                                <GridView >
+                                    <GridViewColumn Header="Индекс гармоники" DisplayMemberBinding="{Binding Path=Index}" />
+                                    <GridViewColumn Header="Коэффициент">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Width="150">
+                                                    <TextBox.Text>
+                                                        <Binding Path="Value"/>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                    
                 </TabItem>
             </TabControl>
 
