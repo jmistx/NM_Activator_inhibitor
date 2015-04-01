@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using HE.Logic;
 using NUnit.Framework;
 
 namespace HE.Test
 {
     [TestFixture]
-    class ActivatorEquationSolverShould
+    internal class ActivatorEquationSolverShould
     {
         [Test]
         public void SolveEquation()
@@ -29,15 +25,16 @@ namespace HE.Test
             };
             solver.InittialConditionU1[0] = 1;
             solver.InittialConditionU2[0] = 0.5;
-            double alpha = (solver.Rho + solver.Kappa * solver.Nu / solver.C ) / solver.Gamma;
-            double beta = solver.C*alpha*alpha / solver.Nu;
-            var answer = solver.Solve();
+            double alpha = (solver.Rho + solver.Kappa*solver.Nu/solver.C)/solver.Gamma;
+            double beta = solver.C*alpha*alpha/solver.Nu;
 
-            Assert.That(answer.ActivatorLayer[5], Is.Not.NaN);
-            Assert.That(answer.InhibitorLayer[5], Is.Not.NaN);
-            
-            Assert.That(Math.Abs(answer.ActivatorLayer[5] - alpha), Is.LessThan(0.1));
-            Assert.That(Math.Abs(answer.InhibitorLayer[5] - beta), Is.LessThan(0.1));
+            solver.Solve();
+
+            Assert.That(solver.ActivatorLayer[5], Is.Not.NaN);
+            Assert.That(solver.InhibitorLayer[5], Is.Not.NaN);
+
+            Assert.That(Math.Abs(solver.ActivatorLayer[5] - alpha), Is.LessThan(0.1));
+            Assert.That(Math.Abs(solver.InhibitorLayer[5] - beta), Is.LessThan(0.1));
         }
     }
 }

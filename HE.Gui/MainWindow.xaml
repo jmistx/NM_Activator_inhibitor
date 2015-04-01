@@ -32,9 +32,11 @@
 
             <WrapPanel Grid.Row="1">
                 <Button Command="{Binding CalculateCommand}">Рассчитать</Button>
-                <Separator />
+                <Separator Width="5"/>
+                <Button Command="{Binding SingleStepCommand}">Сделать один шаг</Button>
+                <Separator Width="5" />
                 <Button Command="{Binding PopulateFirstExampleCommand}">Тестовый пример 1</Button>
-                <Button Command="{Binding PopulateSecondExampleCommand}">Тестовый пример 2</Button>
+                
             </WrapPanel>
 
             <TabControl Grid.Row="2">

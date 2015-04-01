@@ -10,28 +10,80 @@ namespace HE.Gui
 {
     internal class ActivatorViewModel : ViewModelBase
     {
+        public ActivatorViewModel()
+        {
+            CalculateCommand = new RelayCommand(Caluclate);
+            PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
+            SingleStepCommand = new RelayCommand(SingleStep);
+            InitialCondition = new List<InitialHarmonic>();
+            EquationSolver = new ActivatorEquationSolver();
+
+
+            for (int i = 0; i < 20; i++)
+            {
+                InitialCondition.Add(new InitialHarmonic(i));
+            }
+
+            SetTestParameters();
+        }
+
         public PlotModel MatrixModel { get; set; }
 
-        public double Lambda1 { get { return EquationSolver.Lambda1; } set { EquationSolver.Lambda1 = value; } }
+        public double Lambda1
+        {
+            get { return EquationSolver.Lambda1; }
+            set { EquationSolver.Lambda1 = value; }
+        }
 
-        public double Lambda2 { get { return EquationSolver.Lambda2; } set { EquationSolver.Lambda2 = value; } }
+        public double Lambda2
+        {
+            get { return EquationSolver.Lambda2; }
+            set { EquationSolver.Lambda2 = value; }
+        }
 
-        public double Rho { get { return EquationSolver.Rho; } set { EquationSolver.Rho = value; } }
+        public double Rho
+        {
+            get { return EquationSolver.Rho; }
+            set { EquationSolver.Rho = value; }
+        }
 
-        public double Kappa { get { return EquationSolver.Kappa; } set { EquationSolver.Kappa = value; } }
+        public double Kappa
+        {
+            get { return EquationSolver.Kappa; }
+            set { EquationSolver.Kappa = value; }
+        }
 
-        public double Gamma { get { return EquationSolver.Gamma; } set { EquationSolver.Gamma = value; } }
+        public double Gamma
+        {
+            get { return EquationSolver.Gamma; }
+            set { EquationSolver.Gamma = value; }
+        }
 
-        public double Nu { get { return EquationSolver.Nu; } set { EquationSolver.Nu = value; } }
+        public double Nu
+        {
+            get { return EquationSolver.Nu; }
+            set { EquationSolver.Nu = value; }
+        }
 
-        public double C { get { return EquationSolver.C; } set { EquationSolver.C = value; } }
+        public double C
+        {
+            get { return EquationSolver.C; }
+            set { EquationSolver.C = value; }
+        }
 
-        public double TimeStep { get { return EquationSolver.TimeStep; } set { EquationSolver.TimeStep = value; } }
+        public double TimeStep
+        {
+            get { return EquationSolver.TimeStep; }
+            set { EquationSolver.TimeStep = value; }
+        }
 
-        public double EndMomentT { get { return EquationSolver.Time; } set { EquationSolver.Time = value; } }
+        public double EndMomentT
+        {
+            get { return EquationSolver.Time; }
+            set { EquationSolver.Time = value; }
+        }
+
         public int IntervalsX { get; set; }
-
-        
 
         public double[] LastActivatorLayer { get; set; }
 
@@ -46,6 +98,8 @@ namespace HE.Gui
         public ActivatorEquationSolver EquationSolver { get; set; }
 
         public ICommand PopulateFirstExampleCommand { get; set; }
+
+        public ICommand SingleStepCommand { get; set; }
 
         private void SetTestParameters()
         {
@@ -67,7 +121,7 @@ namespace HE.Gui
             }
 
             InitialCondition[0].ActivatorValue = 1;
-            InitialCondition[0].InhibitorValue= 0.5;
+            InitialCondition[0].InhibitorValue = 0.5;
 
             RaisePropertyChanged(null);
         }
@@ -77,10 +131,15 @@ namespace HE.Gui
             EquationSolver.N = IntervalsX;
             EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
             EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
-            ActivatorEquationSolveAnswer answer = EquationSolver.Solve();
+            EquationSolver.Solve();
 
-            LastActivatorLayerView = Populate(answer.ActivatorLayer);
-            LastInhibitorLayerView = Populate(answer.InhibitorLayer);
+            PopulateAnswer();
+        }
+
+        private void PopulateAnswer()
+        {
+            LastActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
+            LastInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
             RaisePropertyChanged(null);
         }
 
@@ -89,20 +148,10 @@ namespace HE.Gui
             return BindingHelper.GetBindableArray(answer);
         }
 
-        public ActivatorViewModel()
+        private void SingleStep()
         {
-            CalculateCommand = new RelayCommand(Caluclate);
-            PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
-            InitialCondition = new List<InitialHarmonic>();
-            EquationSolver = new ActivatorEquationSolver();
-
-
-            for (int i = 0; i < 20; i++)
-            {
-                InitialCondition.Add(new InitialHarmonic(i));
-            }
-
-            SetTestParameters();
+            EquationSolver.SingleStep();
+            PopulateAnswer();
         }
 
         private void PopulateFirstExample()

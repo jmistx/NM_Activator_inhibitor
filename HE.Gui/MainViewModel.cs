@@ -1,7 +1,5 @@
 using System;
 using System.Data;
-using System.Globalization;
-using System.Windows;
 using System.Windows.Input;
 using ExampleLibrary;
 using ExpressionEvaluator;
@@ -14,6 +12,22 @@ namespace HE.Gui
 {
     public class MainViewModel : ViewModelBase
     {
+        public MainViewModel()
+        {
+            CalculateCommand = new RelayCommand(Calculate);
+            PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
+            PopulateSecondExampleCommand = new RelayCommand(PopulateSecondExample);
+            RightBoundary = 1;
+            EndTime = 0.7;
+            NumberOfTimeIntervals = 100;
+            NumberOfSpaceIntervals = 10;
+            LeftBoundaryCondition = "0.0";
+            RightBoundaryCondition = "0.0";
+            InitialCondition = "0.0";
+            Function = "0.0";
+            InitMatrixModel();
+        }
+
         public string Function { get; set; }
 
         public ICommand CalculateCommand { get; set; }
@@ -33,26 +47,10 @@ namespace HE.Gui
 
         public PlotModel MatrixModel { get; set; }
 
-        public MainViewModel()
-        {
-            CalculateCommand = new RelayCommand(Calculate);
-            PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
-            PopulateSecondExampleCommand = new RelayCommand(PopulateSecondExample);
-            RightBoundary = 1;
-            EndTime = 0.7;
-            NumberOfTimeIntervals = 100;
-            NumberOfSpaceIntervals = 10;
-            LeftBoundaryCondition = "0.0";
-            RightBoundaryCondition = "0.0";
-            InitialCondition = "0.0";
-            Function = "0.0";
-            InitMatrixModel();
-        }
-
         private void InitMatrixModel()
         {
             MatrixModel = new PlotModel();
-            var plotModel1 = MatrixModel;
+            PlotModel plotModel1 = MatrixModel;
             var linearAxis1 = new LinearAxis();
             linearAxis1.EndPosition = 0;
             linearAxis1.StartPosition = 1;
@@ -115,7 +113,6 @@ namespace HE.Gui
 
         private void Calculate()
         {
-
             var solver = new HeatEquationSolver
             {
                 LeftBoundary = LeftBoundary,
@@ -125,10 +122,9 @@ namespace HE.Gui
                 StartCondition = Parser.ParsePositionArgMethod(InitialCondition),
                 Function = Parser.ParseTwoArgsMethod(Function)
             };
-            var answer = solver.Solve(EndTime, NumberOfSpaceIntervals, NumberOfTimeIntervals);
+            EquationSolveAnswer answer = solver.Solve(EndTime, NumberOfSpaceIntervals, NumberOfTimeIntervals);
             LastLayer = Populate(answer);
             RaisePropertyChanged(null);
-
         }
 
         private DataView Populate(EquationSolveAnswer answer)
@@ -142,7 +138,6 @@ namespace HE.Gui
             return BindingHelper.GetBindable2DArray(result);
         }
     }
-
 
 
     public class TwoArgs
@@ -167,7 +162,7 @@ namespace HE.Gui
         {
             var typeRegistry = new TypeRegistry();
             var param = new PositionArg();
-            typeRegistry.RegisterType("m", typeof(Math));
+            typeRegistry.RegisterType("m", typeof (Math));
             typeRegistry.RegisterSymbol("p", param);
 
             var expression = new CompiledExpression<double>(textExpression)
@@ -187,7 +182,7 @@ namespace HE.Gui
         {
             var typeRegistry = new TypeRegistry();
             var param = new TimeArg();
-            typeRegistry.RegisterType("m", typeof(Math));
+            typeRegistry.RegisterType("m", typeof (Math));
             typeRegistry.RegisterSymbol("p", param);
 
             var expression = new CompiledExpression<double>(textExpression)
