@@ -79,7 +79,7 @@
                 <TabItem Header="Параметры решения">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition />
+                            <ColumnDefinition Width="350"/>
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
@@ -106,12 +106,23 @@
                             <ListView.View>
                                 <GridView >
                                     <GridViewColumn Header="Индекс гармоники" DisplayMemberBinding="{Binding Path=Index}" />
-                                    <GridViewColumn Header="Коэффициент">
+                                    <GridViewColumn Header="Коэффициент U1">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBox Width="150">
                                                     <TextBox.Text>
-                                                        <Binding Path="Value"/>
+                                                        <Binding Path="ActivatorValue"/>
+                                                    </TextBox.Text>
+                                                </TextBox>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="Коэффициент U2">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBox Width="150">
+                                                    <TextBox.Text>
+                                                        <Binding Path="InhibitorValue"/>
                                                     </TextBox.Text>
                                                 </TextBox>
                                             </DataTemplate>

@@ -16,8 +16,6 @@ namespace HE.Logic
         {
             InittialConditionU1 = new double[InitialConditionComponentsCount];
             InittialConditionU2 = new double[InitialConditionComponentsCount];
-            InittialConditionU1[0] = 1;
-            InittialConditionU2[0] = 0.5;
         }
 
         public double Lambda1 { get; set; }

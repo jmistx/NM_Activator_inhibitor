@@ -27,6 +27,8 @@ namespace HE.Test
                 TimeStep = 0.1,
                 N = 100
             };
+            solver.InittialConditionU1[0] = 1;
+            solver.InittialConditionU2[0] = 0.5;
             double alpha = (solver.Rho + solver.Kappa * solver.Nu / solver.C ) / solver.Gamma;
             double beta = solver.C*alpha*alpha / solver.Nu;
             var answer = solver.Solve();

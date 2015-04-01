@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Windows.Input;
 using HE.Logic;
 using Microsoft.TeamFoundation.MVVM;
@@ -9,41 +10,28 @@ namespace HE.Gui
 {
     internal class ActivatorViewModel : ViewModelBase
     {
-        public ActivatorViewModel()
-        {
-            CalculateCommand = new RelayCommand(Caluclate);
-            InitialCondition = new List<InitialHarmonic>();
-            EquationSolver = new ActivatorEquationSolver();
-
-            for (int i = 0; i < 20; i++)
-            {
-                InitialCondition.Add(new InitialHarmonic(i));
-            }
-
-            SetTestParameters();
-        }
-
         public PlotModel MatrixModel { get; set; }
 
-        public double Lambda1 { get; set; }
+        public double Lambda1 { get { return EquationSolver.Lambda1; } set { EquationSolver.Lambda1 = value; } }
 
-        public double Lambda2 { get; set; }
+        public double Lambda2 { get { return EquationSolver.Lambda2; } set { EquationSolver.Lambda2 = value; } }
 
-        public double Rho { get; set; }
+        public double Rho { get { return EquationSolver.Rho; } set { EquationSolver.Rho = value; } }
 
-        public double Kappa { get; set; }
+        public double Kappa { get { return EquationSolver.Kappa; } set { EquationSolver.Kappa = value; } }
 
-        public double Gamma { get; set; }
+        public double Gamma { get { return EquationSolver.Gamma; } set { EquationSolver.Gamma = value; } }
 
-        public double Nu { get; set; }
+        public double Nu { get { return EquationSolver.Nu; } set { EquationSolver.Nu = value; } }
 
-        public double C { get; set; }
+        public double C { get { return EquationSolver.C; } set { EquationSolver.C = value; } }
 
-        public double TimeStep { get; set; }
+        public double TimeStep { get { return EquationSolver.TimeStep; } set { EquationSolver.TimeStep = value; } }
 
+        public double EndMomentT { get { return EquationSolver.Time; } set { EquationSolver.Time = value; } }
         public int IntervalsX { get; set; }
 
-        public double EndMomentT { get; set; }
+        
 
         public double[] LastActivatorLayer { get; set; }
 
@@ -57,6 +45,8 @@ namespace HE.Gui
 
         public ActivatorEquationSolver EquationSolver { get; set; }
 
+        public ICommand PopulateFirstExampleCommand { get; set; }
+
         private void SetTestParameters()
         {
             Rho = 1.1;
@@ -69,22 +59,24 @@ namespace HE.Gui
             TimeStep = 0.1;
             EndMomentT = 100;
             IntervalsX = 100;
+
+            foreach (InitialHarmonic harmonic in InitialCondition)
+            {
+                harmonic.ActivatorValue = 0;
+                harmonic.InhibitorValue = 0;
+            }
+
+            InitialCondition[0].ActivatorValue = 1;
+            InitialCondition[0].InhibitorValue= 0.5;
+
             RaisePropertyChanged(null);
         }
 
         private void Caluclate()
         {
-            EquationSolver.Rho = Rho;
-            EquationSolver.Kappa = Kappa;
-            EquationSolver.C = C;
-            EquationSolver.Gamma = Gamma;
-            EquationSolver.Nu = Nu;
-            EquationSolver.Lambda1 = Lambda1;
-            EquationSolver.Lambda2 = Lambda2;
-            EquationSolver.TimeStep = TimeStep;
-            EquationSolver.Time = EndMomentT;
             EquationSolver.N = IntervalsX;
-            
+            EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
+            EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
             ActivatorEquationSolveAnswer answer = EquationSolver.Solve();
 
             LastActivatorLayerView = Populate(answer.ActivatorLayer);
@@ -95,6 +87,27 @@ namespace HE.Gui
         private DataView Populate(double[] answer)
         {
             return BindingHelper.GetBindableArray(answer);
+        }
+
+        public ActivatorViewModel()
+        {
+            CalculateCommand = new RelayCommand(Caluclate);
+            PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
+            InitialCondition = new List<InitialHarmonic>();
+            EquationSolver = new ActivatorEquationSolver();
+
+
+            for (int i = 0; i < 20; i++)
+            {
+                InitialCondition.Add(new InitialHarmonic(i));
+            }
+
+            SetTestParameters();
+        }
+
+        private void PopulateFirstExample()
+        {
+            SetTestParameters();
         }
 
         private DataView Populate(EquationSolveAnswer answer)
@@ -114,10 +127,13 @@ namespace HE.Gui
         public InitialHarmonic(int i)
         {
             Index = i;
-            Value = 0;
+            ActivatorValue = 0;
+            InhibitorValue = 0;
         }
 
-        public double Value { get; set; }
+        public double InhibitorValue { get; set; }
+
+        public double ActivatorValue { get; set; }
 
         public int Index { get; set; }
     }
