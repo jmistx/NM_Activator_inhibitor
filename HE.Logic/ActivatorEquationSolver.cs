@@ -39,30 +39,18 @@ namespace HE.Logic
         public double[] ActivatorLayerNext { get; set; }
 
         public double[] InhibitorLayerNext { get; set; }
+        public double CurrentTime { get; set; }
 
-        public void Solve()
+        public void ComputeUntilTime()
         {
-            int n = N;
-            double m = Time/TimeStep;
+            double m = (Time - CurrentTime) / TimeStep;
 
-            ActivatorLayer = new double[n + 1];
-            InhibitorLayer = new double[n + 1];
-            ActivatorLayerNext = new double[n + 1];
-            InhibitorLayerNext = new double[n + 1];
-
-            double h = Length/n;
-
-            for (int i = 0; i < n + 1; i++)
-            {
-                double x = i*h;
-                ActivatorLayer[i] = GetInitValueActivator(x);
-                InhibitorLayer[i] = GetInitValueInhibitor(x);
-            }
-
-            for (int t = 0; t < m + 1; t++)
+            for (int i = 0; i < m; i++)
             {
                 SingleStep();
             }
+
+            CurrentTime += m*TimeStep;
         }
 
         private void Swap()
@@ -129,6 +117,35 @@ namespace HE.Logic
         {
             double h = Length/N;
             TimeStep = h*h/2.0;
+        }
+
+        public void PrepareComputation()
+        {
+            int n = N;
+            CurrentTime = 0;
+
+            ActivatorLayer = new double[n + 1];
+            InhibitorLayer = new double[n + 1];
+            ActivatorLayerNext = new double[n + 1];
+            InhibitorLayerNext = new double[n + 1];
+
+            double h = Length / n;
+
+            for (int i = 0; i < n + 1; i++)
+            {
+                double x = i * h;
+                ActivatorLayer[i] = GetInitValueActivator(x);
+                InhibitorLayer[i] = GetInitValueInhibitor(x);
+            }
+        }
+
+        public void MultipleSteps(int stepsByClickQuantity)
+        {
+            for (int i = 0; i < stepsByClickQuantity; i++)
+            {
+                SingleStep();
+            }
+            CurrentTime += stepsByClickQuantity*TimeStep;
         }
     }
 }

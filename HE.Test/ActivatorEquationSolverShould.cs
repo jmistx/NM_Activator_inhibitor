@@ -28,7 +28,7 @@ namespace HE.Test
             double alpha = (solver.Rho + solver.Kappa*solver.Nu/solver.C)/solver.Gamma;
             double beta = solver.C*alpha*alpha/solver.Nu;
 
-            solver.Solve();
+            solver.ComputeUntilTime();
 
             Assert.That(solver.ActivatorLayer[5], Is.Not.NaN);
             Assert.That(solver.InhibitorLayer[5], Is.Not.NaN);

@@ -12,10 +12,11 @@ namespace HE.Gui
     {
         public ActivatorViewModel()
         {
-            CalculateCommand = new RelayCommand(Caluclate);
+            CalculateCommand = new RelayCommand(ComputeUntilTime);
             PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
             SingleStepCommand = new RelayCommand(SingleStep);
             SetTimeStepCommand = new RelayCommand(SetTimeStep);
+            PrepareComputationCommand = new RelayCommand(PrepareComputation);
             InitialCondition = new List<InitialHarmonic>();
             EquationSolver = new ActivatorEquationSolver();
 
@@ -26,6 +27,15 @@ namespace HE.Gui
             }
 
             SetTestParameters();
+        }
+
+        private void PrepareComputation()
+        {
+            EquationSolver.N = IntervalsX;
+            EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
+            EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
+            EquationSolver.PrepareComputation();
+            RaisePropertyChanged(null);
         }
 
         private void SetTimeStep()
@@ -112,6 +122,13 @@ namespace HE.Gui
 
         public ICommand SetTimeStepCommand { get; set; }
 
+        public double CurrentTime
+        {
+            get { return EquationSolver.CurrentTime; }
+        }
+
+        public ICommand PrepareComputationCommand { get; set; }
+
         private void SetTestParameters()
         {
             Rho = 1.1;
@@ -138,13 +155,9 @@ namespace HE.Gui
             RaisePropertyChanged(null);
         }
 
-        private void Caluclate()
+        private void ComputeUntilTime()
         {
-            EquationSolver.N = IntervalsX;
-            EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
-            EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
-            EquationSolver.Solve();
-
+            EquationSolver.ComputeUntilTime();
             PopulateAnswer();
         }
 
@@ -162,10 +175,8 @@ namespace HE.Gui
 
         private void SingleStep()
         {
-            for (int i = 0; i < StepsByClickQuantity; i++)
-            {
-                EquationSolver.SingleStep();    
-            }
+            EquationSolver.MultipleSteps(StepsByClickQuantity); 
+
             PopulateAnswer();
         }
 

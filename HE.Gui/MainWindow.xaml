@@ -82,22 +82,49 @@
                                     <RowDefinition />
                                     <RowDefinition />
                                     <RowDefinition />
+                                    <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="180" />
                                     <ColumnDefinition Width="150" />
                                 </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" FontSize="12" Grid.Row="1">Шаг по времени</Label>
-                                <WrapPanel Grid.Column="1" Grid.Row="1" >
-                                    <TextBox Width="120" Text="{Binding TimeStep}" />
 
-                                    <Button Width="30" FontStretch="Expanded" ToolTip="Установить оптимальный шаг" IsEnabled="{Binding EquationSolver.N}" Command="{Binding SetTimeStepCommand }">!</Button>
-                                </WrapPanel>
-                                
-                                <Label Grid.Column="0" FontSize="12" Grid.Row="2">Разбиений по пространству</Label>
-                                <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding IntervalsX}" />
-                                <Label Grid.Column="0" FontSize="12" Grid.Row="3">Конечный момент T</Label>
-                                <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding EndMomentT}" />
+                                <StackPanel HorizontalAlignment="Left" Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2">
+                                    <UniformGrid Rows="1">
+                                        <Label FontSize="12">Разбиений по пространству</Label>
+                                        <TextBox Text="{Binding IntervalsX}" />
+                                    </UniformGrid>
+                                    <Button Command="{Binding PrepareComputationCommand}">Задать шаг сетки по X</Button>
+                                    <UniformGrid Rows="2" HorizontalAlignment="Left">
+                                        <Label FontSize="12">Конечный момент T</Label>
+                                        <TextBox Width="150" Text="{Binding EndMomentT}" />
+                                        <Label FontSize="12">Шаг по времени</Label>
+                                        <WrapPanel>
+                                            <TextBox Width="120" Text="{Binding TimeStep}" />
+
+                                            <Button Width="30" FontStretch="Expanded"
+                                                    ToolTip="Установить оптимальный шаг"
+                                                    IsEnabled="{Binding EquationSolver.N}"
+                                                    Command="{Binding SetTimeStepCommand }">
+                                                !
+                                            </Button>
+                                        </WrapPanel>
+                                    </UniformGrid>
+                                    <Button Command="{Binding CalculateCommand}">Считать до T</Button>
+                                    <UniformGrid Columns="2">
+                                        <Button Command="{Binding SingleStepCommand}">Сделать несколько шагов</Button>
+                                        <TextBox Text="{Binding StepsByClickQuantity}" />
+                                    </UniformGrid>
+                                    <WrapPanel>
+                                        <Label>Текущее время</Label>
+                                        <Label Content="{Binding CurrentTime}" />
+                                    </WrapPanel>
+                                    <Label>________________________</Label>
+                                    <Button HorizontalAlignment="Left" Width="200"
+                                            Command="{Binding PopulateFirstExampleCommand}">
+                                        Сбросить параметры на тестовые
+                                    </Button>
+                                </StackPanel>
                             </Grid>
                         </StackPanel>
                         <ListView ItemsSource="{Binding InitialCondition}" Grid.Column="1">
@@ -133,17 +160,7 @@
                     </Grid>
 
                 </TabItem>
-                <TabItem Header="Управление">
-                    <StackPanel HorizontalAlignment="Left">
-                        <Button HorizontalAlignment="Left" Width="150" Command="{Binding CalculateCommand}">Рассчитать</Button>
-                        <WrapPanel>
-                            <Button Width="150" Command="{Binding SingleStepCommand}">Сделать несколько шагов</Button>
-                            <Separator Width="10"></Separator>
-                            <TextBox Width="100" Text="{Binding StepsByClickQuantity}"></TextBox>
-                        </WrapPanel>
-                        <Button HorizontalAlignment="Left"  Width="150" Command="{Binding PopulateFirstExampleCommand}">Тестовый пример 1</Button>
-                    </StackPanel>
-                </TabItem>
+
             </TabControl>
 
         </Grid>
