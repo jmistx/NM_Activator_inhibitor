@@ -124,5 +124,11 @@ namespace HE.Logic
 
             Swap();
         }
+
+        public void AlignTimeStep()
+        {
+            double h = Length/N;
+            TimeStep = h*h/2.0;
+        }
     }
 }

@@ -15,6 +15,7 @@ namespace HE.Gui
             CalculateCommand = new RelayCommand(Caluclate);
             PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
             SingleStepCommand = new RelayCommand(SingleStep);
+            SetTimeStepCommand = new RelayCommand(SetTimeStep);
             InitialCondition = new List<InitialHarmonic>();
             EquationSolver = new ActivatorEquationSolver();
 
@@ -25,6 +26,12 @@ namespace HE.Gui
             }
 
             SetTestParameters();
+        }
+
+        private void SetTimeStep()
+        {
+            EquationSolver.AlignTimeStep();
+            RaisePropertyChanged(null);
         }
 
         public PlotModel MatrixModel { get; set; }
@@ -101,6 +108,10 @@ namespace HE.Gui
 
         public ICommand SingleStepCommand { get; set; }
 
+        public int StepsByClickQuantity { get; set; }
+
+        public ICommand SetTimeStepCommand { get; set; }
+
         private void SetTestParameters()
         {
             Rho = 1.1;
@@ -110,9 +121,10 @@ namespace HE.Gui
             Nu = 0.1;
             Lambda1 = 1;
             Lambda2 = 2;
-            TimeStep = 0.1;
-            EndMomentT = 100;
+            TimeStep = 0.00005;
+            EndMomentT = 10;
             IntervalsX = 100;
+            StepsByClickQuantity = 10;
 
             foreach (InitialHarmonic harmonic in InitialCondition)
             {
@@ -150,7 +162,10 @@ namespace HE.Gui
 
         private void SingleStep()
         {
-            EquationSolver.SingleStep();
+            for (int i = 0; i < StepsByClickQuantity; i++)
+            {
+                EquationSolver.SingleStep();    
+            }
             PopulateAnswer();
         }
 

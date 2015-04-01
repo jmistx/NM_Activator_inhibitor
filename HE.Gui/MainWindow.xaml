@@ -15,7 +15,7 @@
                 <RowDefinition Height="50" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TabControl Grid.Row="0" Grid.Column="0">
+            <TabControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                 <TabItem Header="Табличный послойный вывод">
                     <StackPanel>
                         <Label>Распределние Активатора на слое</Label>
@@ -29,15 +29,6 @@
                 </TabItem>
                 <TabItem Header="Норма разности на слое" />
             </TabControl>
-
-            <WrapPanel Grid.Row="1">
-                <Button Command="{Binding CalculateCommand}">Рассчитать</Button>
-                <Separator Width="5"/>
-                <Button Command="{Binding SingleStepCommand}">Сделать один шаг</Button>
-                <Separator Width="5" />
-                <Button Command="{Binding PopulateFirstExampleCommand}">Тестовый пример 1</Button>
-                
-            </WrapPanel>
 
             <TabControl Grid.Row="2">
                 <TabItem Header="Параметры уравнения">
@@ -81,7 +72,7 @@
                 <TabItem Header="Параметры решения">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="350"/>
+                            <ColumnDefinition Width="350" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
@@ -97,7 +88,12 @@
                                     <ColumnDefinition Width="150" />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" FontSize="12" Grid.Row="1">Шаг по времени</Label>
-                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TimeStep}" />
+                                <WrapPanel Grid.Column="1" Grid.Row="1" >
+                                    <TextBox Width="120" Text="{Binding TimeStep}" />
+
+                                    <Button Width="30" FontStretch="Expanded" ToolTip="Установить оптимальный шаг" IsEnabled="{Binding EquationSolver.N}" Command="{Binding SetTimeStepCommand }">!</Button>
+                                </WrapPanel>
+                                
                                 <Label Grid.Column="0" FontSize="12" Grid.Row="2">Разбиений по пространству</Label>
                                 <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding IntervalsX}" />
                                 <Label Grid.Column="0" FontSize="12" Grid.Row="3">Конечный момент T</Label>
@@ -106,14 +102,15 @@
                         </StackPanel>
                         <ListView ItemsSource="{Binding InitialCondition}" Grid.Column="1">
                             <ListView.View>
-                                <GridView >
-                                    <GridViewColumn Header="Индекс гармоники" DisplayMemberBinding="{Binding Path=Index}" />
+                                <GridView>
+                                    <GridViewColumn Header="Индекс гармоники"
+                                                    DisplayMemberBinding="{Binding Path=Index}" />
                                     <GridViewColumn Header="Коэффициент U1">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBox Width="150">
                                                     <TextBox.Text>
-                                                        <Binding Path="ActivatorValue"/>
+                                                        <Binding Path="ActivatorValue" />
                                                     </TextBox.Text>
                                                 </TextBox>
                                             </DataTemplate>
@@ -124,7 +121,7 @@
                                             <DataTemplate>
                                                 <TextBox Width="150">
                                                     <TextBox.Text>
-                                                        <Binding Path="InhibitorValue"/>
+                                                        <Binding Path="InhibitorValue" />
                                                     </TextBox.Text>
                                                 </TextBox>
                                             </DataTemplate>
@@ -134,7 +131,18 @@
                             </ListView.View>
                         </ListView>
                     </Grid>
-                    
+
+                </TabItem>
+                <TabItem Header="Управление">
+                    <StackPanel HorizontalAlignment="Left">
+                        <Button HorizontalAlignment="Left" Width="150" Command="{Binding CalculateCommand}">Рассчитать</Button>
+                        <WrapPanel>
+                            <Button Width="150" Command="{Binding SingleStepCommand}">Сделать несколько шагов</Button>
+                            <Separator Width="10"></Separator>
+                            <TextBox Width="100" Text="{Binding StepsByClickQuantity}"></TextBox>
+                        </WrapPanel>
+                        <Button HorizontalAlignment="Left"  Width="150" Command="{Binding PopulateFirstExampleCommand}">Тестовый пример 1</Button>
+                    </StackPanel>
                 </TabItem>
             </TabControl>
 
