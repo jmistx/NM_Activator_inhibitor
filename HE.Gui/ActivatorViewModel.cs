@@ -41,7 +41,7 @@ namespace HE.Gui
 
         public double TimeStep { get; set; }
 
-        public double IntervalsX { get; set; }
+        public int IntervalsX { get; set; }
 
         public double EndMomentT { get; set; }
 
@@ -66,6 +66,9 @@ namespace HE.Gui
             Nu = 0.1;
             Lambda1 = 1;
             Lambda2 = 2;
+            TimeStep = 0.1;
+            EndMomentT = 100;
+            IntervalsX = 100;
             RaisePropertyChanged(null);
         }
 
@@ -78,7 +81,9 @@ namespace HE.Gui
             EquationSolver.Nu = Nu;
             EquationSolver.Lambda1 = Lambda1;
             EquationSolver.Lambda2 = Lambda2;
+            EquationSolver.TimeStep = TimeStep;
             EquationSolver.Time = EndMomentT;
+            EquationSolver.N = IntervalsX;
             
             ActivatorEquationSolveAnswer answer = EquationSolver.Solve();
 

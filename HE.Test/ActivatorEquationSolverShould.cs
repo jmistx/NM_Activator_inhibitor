@@ -23,7 +23,9 @@ namespace HE.Test
                 Nu = 0.1,
                 Time = 1000,
                 Lambda1 = 1,
-                Lambda2 = 2
+                Lambda2 = 2,
+                TimeStep = 0.1,
+                N = 100
             };
             double alpha = (solver.Rho + solver.Kappa * solver.Nu / solver.C ) / solver.Gamma;
             double beta = solver.C*alpha*alpha / solver.Nu;

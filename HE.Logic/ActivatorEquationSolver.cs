@@ -33,11 +33,13 @@ namespace HE.Logic
         public double[] InittialConditionU2 { get; set; }
 
         public double[] InittialConditionU1 { get; set; }
+        public double TimeStep { get; set; }
+        public int N { get; set; }
 
         public ActivatorEquationSolveAnswer Solve()
         {
-            int n = 100;
-            double m = 1000;
+            int n = N;
+            double m = Time/TimeStep;
 
             var activatorLayer = new double[n + 1];
             var inhibitorLayer = new double[n + 1];
