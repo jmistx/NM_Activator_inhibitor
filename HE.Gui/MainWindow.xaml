@@ -2,39 +2,41 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:oxy="http://oxyplot.org/wpf" 
+        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        Title="MainWindow" Height="841.798" Width="677.703"
+        Title="MainWindow" Height="726.798" Width="677.703"
         xmlns:gui="clr-namespace:HE.Gui"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=gui:MainViewModel}"
-        >
+        d:DataContext="{d:DesignInstance Type=gui:AcceptorViewModel}">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition Height="50"/>
+                <RowDefinition Height="300" />
+                <RowDefinition Height="50" />
                 <RowDefinition />
             </Grid.RowDefinitions>
-            <TabControl>
+            <TabControl Grid.Row="0" Grid.Column="0">
                 <TabItem Header="Табличный послойный вывод">
-                    <DataGrid IsReadOnly="True" ItemsSource="{Binding LastLayer}"></DataGrid>
-                </TabItem>    
+                    <StackPanel>
+                        <Label>Распределние Активатора на слое</Label>
+                        <DataGrid IsReadOnly="True" ItemsSource="{Binding LastActivatorLayer}" />
+                        <Label>Распределние Ингибитора на слое</Label>
+                        <DataGrid IsReadOnly="True" ItemsSource="{Binding LastInhibitorLayer}" />
+                    </StackPanel>
+                </TabItem>
                 <TabItem Header="Графическое представление">
-                    <oxy:PlotView Model="{Binding MatrixModel}">
-                    </oxy:PlotView>
+                    <oxy:PlotView Model="{Binding MatrixModel}" />
                 </TabItem>
-                <TabItem Header="Норма разности на слое">
-
-                </TabItem>
+                <TabItem Header="Норма разности на слое" />
             </TabControl>
-            
+
             <WrapPanel Grid.Row="1">
                 <Button Command="{Binding CalculateCommand}">Рассчитать</Button>
-                <Separator></Separator>
+                <Separator />
                 <Button Command="{Binding PopulateFirstExampleCommand}">Тестовый пример 1</Button>
                 <Button Command="{Binding PopulateSecondExampleCommand}">Тестовый пример 2</Button>
             </WrapPanel>
+
             <TabControl Grid.Row="2">
                 <TabItem Header="Параметры уравнения">
                     <StackPanel>
@@ -52,23 +54,24 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="118" />
-                                <ColumnDefinition Width="145" />
+                                <ColumnDefinition Width="200" />
                             </Grid.ColumnDefinitions>
-                            <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Source="res\Eq1.gif"></Image>
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">λ1</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1"  Text="{Binding RightBoundary}"/>
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="2" Grid.ColumnSpan="2">λ2</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding LeftBoundaryCondition}"/>
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="3" Grid.ColumnSpan="2">ρ</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding RightBoundaryCondition}"/>
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="4" Grid.ColumnSpan="2">κ</Label>
-                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding InitialCondition}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="5" Grid.ColumnSpan="2">γ</Label>
-                            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Function}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="6" Grid.ColumnSpan="2">ν</Label>
-                            <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding EndTime}"/>
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="7" Grid.ColumnSpan="2">c</Label>
-                            <TextBox Grid.Column="1" Grid.Row="7"  Text="{Binding NumberOfSpaceIntervals}"/>
+                            <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"
+                                   Grid.ColumnSpan="3" Source="res\Eq1.gif" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="1">λ1</Label>
+                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Lambda1}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="2">λ2</Label>
+                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Lambda2}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="3">ρ</Label>
+                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Rho}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="4">κ</Label>
+                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Kappa}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="5">γ</Label>
+                            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Gamma}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="6">ν</Label>
+                            <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Nu}" />
+                            <Label Grid.Column="0" FontSize="18" Grid.Row="7">c</Label>
+                            <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding C}" />
                         </Grid>
                     </StackPanel>
 
@@ -83,22 +86,63 @@
                                 <RowDefinition />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180"/>
-                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="150" />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" FontSize="12" Grid.Row="0">Разбиений по времени</Label>
-                            <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding NumberOfTimeIntervals}"/>
                             <Label Grid.Column="0" FontSize="12" Grid.Row="1">Шаг по времени</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding NumberOfTimeIntervals}"/>
+                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding TimeStep}" />
                             <Label Grid.Column="0" FontSize="12" Grid.Row="2">Разбиений по пространству</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding NumberOfTimeIntervals}"/>
+                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding IntervalsX}" />
                             <Label Grid.Column="0" FontSize="12" Grid.Row="3">Конечный момент T</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding NumberOfTimeIntervals}"/>
+                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding EndMomentT}" />
                         </Grid>
                     </StackPanel>
                 </TabItem>
+                <TabItem Header="Начальные условия">
+
+                    <ListView ItemsSource="{Binding InitialCondition}">
+                        <!--                        <DataTemplate x:Name="inputTemplate">-->
+                        <!--                            <TextBox>-->
+                        <!--                                <TextBox.Text>-->
+                        <!--                                    <Binding />-->
+                        <!--                                </TextBox.Text>-->
+                        <!--                            </TextBox>-->
+                        <!--                        </DataTemplate>-->
+                        <!--                        <ListBox.ItemTemplate>-->
+                        <!--                            <DataTemplate>-->
+                        <!--                                <DockPanel>-->
+                        <!--                                    <Label>-->
+                        <!--                                        <Binding Path="Index"></Binding>-->
+                        <!--                                    </Label>-->
+<!--                        <TextBox>-->
+<!--                            <TextBox.Text>-->
+<!--                                <Binding Path="Value" />-->
+<!--                            </TextBox.Text>-->
+<!--                        </TextBox>-->
+                        <!---->
+                        <!--                                </DockPanel>-->
+                        <!--                            </DataTemplate>-->
+                        <!--                        </ListBox.ItemTemplate>-->
+                        <ListView.View>
+                            <GridView >
+                                <GridViewColumn Header="Индекс гармоники" DisplayMemberBinding="{Binding Path=Index}" />
+                                <GridViewColumn Header="Коэффициент">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBox>
+                                                <TextBox.Text>
+                                                    <Binding Path="Value"/>
+                                                </TextBox.Text>
+                                            </TextBox>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </TabItem>
             </TabControl>
-           
+
         </Grid>
     </Grid>
 </Window>

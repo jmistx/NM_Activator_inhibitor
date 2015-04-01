@@ -199,7 +199,6 @@
                 points.Add(this.Transform(n, m));
             }
 
-            //rc.DrawClippedLineSegments(points, clip, this.GridColor, 1, LineStyle.Solid, LineJoin.Miter, true);
             rc.DrawClippedLineSegments(clip, points, GridColor, 1, null, LineJoin.Miter, true);
 
                 var borderPoints = new List<ScreenPoint>
@@ -214,8 +213,6 @@
                         this.Transform(m, n)
                     };
 
-//                rc.DrawClippedLineSegments(
-//                    borderPoints, clip, this.BorderColor, 1, LineStyle.Solid, LineJoin.Miter, true);
                 rc.DrawClippedLineSegments(clip, borderPoints, GridColor, 1, null, LineJoin.Miter, true);
             
         }
