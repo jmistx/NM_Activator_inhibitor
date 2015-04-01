@@ -22,12 +22,12 @@ namespace HE.Logic
 
         public double Lambda1 { get; set; }
         public double Lambda2 { get; set; }
-        public double Ro { get; set; }
+        public double Rho { get; set; }
         public double Kappa { get; set; }
         public double Gamma { get; set; }
         public double C { get; set; }
-        public double Nyu { get; set; }
-        public double Length { get; set; }
+        public double Nu { get; set; }
+        private double Length { get { return 1; } }
         public double Time { get; set; }
 
         public double[] InittialConditionU2 { get; set; }
@@ -37,7 +37,7 @@ namespace HE.Logic
         public ActivatorEquationSolveAnswer Solve()
         {
             int n = 100;
-            double m = 100000;
+            double m = 1000;
 
             var activatorLayer = new double[n + 1];
             var inhibitorLayer = new double[n + 1];
@@ -59,13 +59,13 @@ namespace HE.Logic
                 for (int i = 1; i < n; i++)
                 {
                     activatorLayerNext[i] = activatorLayer[i] + k * (Lambda1 * diff(activatorLayer, i, h) 
-                                             + Ro +
+                                             + Rho +
                                              Kappa * activatorLayer[i] * activatorLayer[i] / inhibitorLayer[i] -
                                              Gamma * activatorLayer[i]);
                     inhibitorLayerNext[i] = inhibitorLayer[i] + k * (Lambda2 * diff(inhibitorLayer, i, h)
                     +
                                              C * (activatorLayer[i] * activatorLayer[i]) -
-                                             Nyu * inhibitorLayer[i]);
+                                             Nu * inhibitorLayer[i]);
                 }
                 activatorLayerNext[0] = activatorLayerNext[1];
                 activatorLayerNext[n] = activatorLayerNext[n-1];

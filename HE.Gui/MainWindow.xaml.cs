@@ -23,7 +23,7 @@ namespace HE.Gui
         public MainWindow()
         {
             InitializeComponent();
-            this.DataContext = new AcceptorViewModel();
+            this.DataContext = new ActivatorViewModel();
         }
     }
 }

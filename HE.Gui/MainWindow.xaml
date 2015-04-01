@@ -7,7 +7,7 @@
         Title="MainWindow" Height="726.798" Width="677.703"
         xmlns:gui="clr-namespace:HE.Gui"
         mc:Ignorable="d"
-        d:DataContext="{d:DesignInstance Type=gui:AcceptorViewModel}">
+        d:DataContext="{d:DesignInstance Type=gui:ActivatorViewModel}">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
@@ -19,9 +19,9 @@
                 <TabItem Header="Табличный послойный вывод">
                     <StackPanel>
                         <Label>Распределние Активатора на слое</Label>
-                        <DataGrid IsReadOnly="True" ItemsSource="{Binding LastActivatorLayer}" />
+                        <DataGrid IsReadOnly="True" ItemsSource="{Binding LastActivatorLayerView}" />
                         <Label>Распределние Ингибитора на слое</Label>
-                        <DataGrid IsReadOnly="True" ItemsSource="{Binding LastInhibitorLayer}" />
+                        <DataGrid IsReadOnly="True" ItemsSource="{Binding LastInhibitorLayerView}" />
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Графическое представление">

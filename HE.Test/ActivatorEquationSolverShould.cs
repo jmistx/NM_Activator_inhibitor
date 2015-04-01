@@ -16,18 +16,17 @@ namespace HE.Test
         {
             var solver = new ActivatorEquationSolver
             {
-                Ro = 1.1,
+                Rho = 1.1,
                 Kappa = 1.5,
                 C = 1.2,
                 Gamma = 0.1,
-                Nyu = 0.1,
-                Length = 1,
+                Nu = 0.1,
                 Time = 1000,
                 Lambda1 = 1,
                 Lambda2 = 2
             };
-            double alpha = (solver.Ro + solver.Kappa * solver.Nyu / solver.C ) / solver.Gamma;
-            double beta = solver.C*alpha*alpha / solver.Nyu;
+            double alpha = (solver.Rho + solver.Kappa * solver.Nu / solver.C ) / solver.Gamma;
+            double beta = solver.C*alpha*alpha / solver.Nu;
             var answer = solver.Solve();
 
             Assert.That(answer.ActivatorLayer[5], Is.Not.NaN);

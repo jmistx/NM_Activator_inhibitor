@@ -23,6 +23,24 @@ namespace HE.Gui
 
     public class BindingHelper
     {
+        public static DataView GetBindableArray(double[] array)
+        {
+            var dataTable = new DataTable();
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                dataTable.Columns.Add(i.ToString(), typeof(Ref<string>));
+            }
+            var dataRow = dataTable.NewRow();
+            dataTable.Rows.Add(dataRow);
+            var dataView = new DataView(dataTable);
+            for (int i = 0; i < array.GetLength(0); i++)
+            {
+                int a = i;
+                var refT = new Ref<string>(() => array[a].ToString("F"), z => { });
+                dataView[0][i] = refT;
+            }
+            return dataView;
+        }
         public static DataView GetBindable2DArray<T>(T[,] array)
         {
             var dataTable = new DataTable();
