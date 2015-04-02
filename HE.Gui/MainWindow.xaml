@@ -4,23 +4,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        Title="MainWindow" Height="726.798" Width="677.703"
+        Title="MainWindow" Height="671.798" Width="677.703"
         xmlns:gui="clr-namespace:HE.Gui"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=gui:ActivatorViewModel}">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="300" />
+                <RowDefinition Height="350" />
                 <RowDefinition Height="50" />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <TabControl Grid.Row="0" Grid.Column="0" Grid.RowSpan="2">
                 <TabItem Header="Табличный послойный вывод">
                     <StackPanel>
-                        <Label>Распределние Активатора на слое</Label>
+                        <Label>Начальное распределение Активатора</Label>
+                        <DataGrid IsReadOnly="True" ItemsSource="{Binding FirstActivatorLayerView}" />
+                        <Label>Начальное распределение Ингибитора </Label>
+                        <DataGrid IsReadOnly="True" ItemsSource="{Binding FirstInhibitorLayerView}" />
+                        <Label>Распределение Активатора на слое</Label>
                         <DataGrid IsReadOnly="True" ItemsSource="{Binding LastActivatorLayerView}" />
-                        <Label>Распределние Ингибитора на слое</Label>
+                        <Label>Распределение Ингибитора на слое</Label>
                         <DataGrid IsReadOnly="True" ItemsSource="{Binding LastInhibitorLayerView}" />
                     </StackPanel>
                 </TabItem>
@@ -32,25 +36,10 @@
 
             <TabControl Grid.Row="2">
                 <TabItem Header="Параметры уравнения">
-                    <StackPanel>
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="118" />
-                                <ColumnDefinition Width="200" />
-                            </Grid.ColumnDefinitions>
-                            <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"
+                    <StackPanel Width="300" HorizontalAlignment="Left">
+                        <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"
                                    Grid.ColumnSpan="3" Source="res\Eq1.gif" />
+                        <UniformGrid Columns="4">
                             <Label Grid.Column="0" FontSize="18" Grid.Row="1">λ1</Label>
                             <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Lambda1}" />
                             <Label Grid.Column="0" FontSize="18" Grid.Row="2">λ2</Label>
@@ -65,7 +54,7 @@
                             <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Nu}" />
                             <Label Grid.Column="0" FontSize="18" Grid.Row="7">c</Label>
                             <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding C}" />
-                        </Grid>
+                        </UniformGrid>
                     </StackPanel>
 
                 </TabItem>

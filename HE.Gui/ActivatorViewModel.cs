@@ -29,21 +29,6 @@ namespace HE.Gui
             SetTestParameters();
         }
 
-        private void PrepareComputation()
-        {
-            EquationSolver.N = IntervalsX;
-            EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
-            EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
-            EquationSolver.PrepareComputation();
-            RaisePropertyChanged(null);
-        }
-
-        private void SetTimeStep()
-        {
-            EquationSolver.AlignTimeStep();
-            RaisePropertyChanged(null);
-        }
-
         public PlotModel MatrixModel { get; set; }
 
         public double Lambda1
@@ -129,6 +114,27 @@ namespace HE.Gui
 
         public ICommand PrepareComputationCommand { get; set; }
 
+        public DataView FirstActivatorLayerView { get; set; }
+
+        public DataView FirstInhibitorLayerView { get; set; }
+
+        private void PrepareComputation()
+        {
+            EquationSolver.N = IntervalsX;
+            EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
+            EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
+            EquationSolver.PrepareComputation();
+            FirstActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
+            FirstInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
+            RaisePropertyChanged(null);
+        }
+
+        private void SetTimeStep()
+        {
+            EquationSolver.AlignTimeStep();
+            RaisePropertyChanged(null);
+        }
+
         private void SetTestParameters()
         {
             Rho = 1.1;
@@ -175,7 +181,7 @@ namespace HE.Gui
 
         private void SingleStep()
         {
-            EquationSolver.MultipleSteps(StepsByClickQuantity); 
+            EquationSolver.MultipleSteps(StepsByClickQuantity);
 
             PopulateAnswer();
         }
