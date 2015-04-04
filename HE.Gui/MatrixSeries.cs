@@ -13,12 +13,14 @@ namespace ExampleLibrary
         /// <summary>
         ///     The image
         /// </summary>
-        private OxyImage image;
+        private OxyImage timeline1Image;
 
         /// <summary>
         ///     The matrix
         /// </summary>
         private double[,] matrix;
+
+        private OxyImage timeline2Image;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="MatrixSeries" /> class.
@@ -30,12 +32,15 @@ namespace ExampleLibrary
             GridColor = OxyColors.LightGray;
             BorderColor = OxyColors.Gray;
             NotZeroColor = OxyColors.Black;
-            TresholdValue = 1;
+            TresholdValue1 = 1;
+            TresholdValue2 = 1;
             MaxTime = 5;
             MaxCoordinate = 1;
             Interpolate = false;
             TrackerFormatString = "{0}\r\n[{1},{2}] = {3}";
         }
+
+        public double TresholdValue2 { get; set; }
 
         public bool Interpolate { get; set; }
 
@@ -52,7 +57,7 @@ namespace ExampleLibrary
 
             set
             {
-                image = null;
+                timeline1Image = null;
                 matrix = value;
             }
         }
@@ -97,7 +102,7 @@ namespace ExampleLibrary
         /// <value>
         ///     The zero tolerance.
         /// </value>
-        public double TresholdValue { get; set; }
+        public double TresholdValue1 { get; set; }
 
         public List<double[]> Timeline1 { get; set; }
         public List<double[]> Timeline2 { get; set; }
@@ -140,30 +145,39 @@ namespace ExampleLibrary
         /// <param name="model">The model.</param>
         public override void Render(IRenderContext rc, PlotModel model)
         {
-            if (Matrix == null)
+            if (Timeline1 == null || Timeline2 == null)
             {
                 return;
             }
 
-            int m = Matrix.GetLength(0);
-            int n = Matrix.GetLength(1);
+            if (Timeline1.Count != Timeline2.Count)
+            {
+                throw new Exception("Timeline count");
+            }
+
+            if (Timeline1.Count == 0)
+            {
+                return;
+            }
+
+            if (Timeline1[0].Length != Timeline2[0].Length)
+            {
+                throw new Exception("Timeline Length");
+            }
+
+            int m = Timeline1[0].Length;
+            int n = Timeline1.Count;
 
             ScreenPoint p0 = Transform(0, MaxTime);
             ScreenPoint p1 = Transform(MaxCoordinate, 0);
 
-            if (image == null)
+            if (timeline1Image == null)
             {
-                var pixels = new OxyColor[m, n];
-                for (int i = 0; i < m; i++)
-                {
-                    for (int j = 0; j < n; j++)
-                    {
-                        pixels[i, j] = OxyColor.FromAColor((byte) ((Matrix[i, n - j - 1]/TresholdValue)*255),
-                            OxyColors.Black);
-                    }
-                }
-
-                image = OxyImage.Create(pixels, ImageFormat.Png);
+                timeline1Image = CreateImageByTimeline(m, n, Timeline1, TresholdValue1);
+            }
+            if (timeline2Image == null)
+            {
+                timeline2Image = CreateImageByTimeline(m, n, Timeline2, TresholdValue2);
             }
 
 
@@ -173,7 +187,29 @@ namespace ExampleLibrary
             double y0 = p0.Y;
             double w = Math.Abs(p0.X - p1.X);
             double h = Math.Abs(p0.Y - p1.Y);
-            rc.DrawClippedImage(clip, image, x0, y0, w, h, 1, Interpolate);
+
+            rc.DrawClippedImage(clip, timeline1Image, x0, y0, w, h, 1, Interpolate);
+            rc.DrawClippedImage(clip, timeline2Image, p1.X, y0, w, h, 1, Interpolate);
+        }
+
+        private OxyImage CreateImageByTimeline(int m, int n, List<double[]> timeline1, double treshold)
+        {
+            var pixels = new OxyColor[m, n];
+
+            int j = 0;
+
+            foreach (var snapshot in timeline1)
+            {
+                for (int i = 0; i < m; i++)
+                {
+                    double alphaChannelValue = (snapshot[i]/treshold)*255;
+                    pixels[i, n - j - 1] = OxyColor.FromAColor((byte) (alphaChannelValue > 255? 255: alphaChannelValue),
+                        OxyColors.Black);
+                }
+                j++;
+            }
+
+            return OxyImage.Create(pixels, ImageFormat.Png);
         }
 
         private void drawBorder(IRenderContext rc, OxyRect clip, DataPoint leftUp, DataPoint rightDown)
@@ -187,7 +223,7 @@ namespace ExampleLibrary
                 Transform(leftUp.X, leftUp.Y),
             };
 
-            rc.DrawClippedLineSegments(clip, borderPoints, OxyColors.DarkRed, 2, null, LineJoin.Miter, true);
+            rc.DrawClippedLineSegments(clip, borderPoints, OxyColors.Yellow, 2, null, LineJoin.Miter, true);
         }
 
         /// <summary>
@@ -202,7 +238,7 @@ namespace ExampleLibrary
             }
 
             MinX = 0;
-            MaxX = MaxCoordinate;
+            MaxX = MaxCoordinate * 2;
             MinY = 0;
             MaxY = MaxTime;
         }

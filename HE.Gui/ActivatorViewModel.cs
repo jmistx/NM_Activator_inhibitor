@@ -24,6 +24,7 @@ namespace HE.Gui
             PrepareComputationCommand = new RelayCommand(PrepareComputation);
             InitialCondition = new List<InitialHarmonic>();
             EquationSolver = new ActivatorEquationSolver();
+            ApplyTresholdsCommand = new RelayCommand(RecreatePlot);
 
 
             for (int i = 0; i < 20; i++)
@@ -123,12 +124,24 @@ namespace HE.Gui
 
         public DataView FirstInhibitorLayerView { get; set; }
 
+        public double SnapshotTimeStep { get; set; }
+
+        public double ActivatorTreshold { get; set; }
+
+        public double InhibitorTreshold { get; set; }
+
+        public ICommand ApplyTresholdsCommand { get; set; }
+
+        public bool InterpolatePlot { get; set; }
+
         private void PrepareComputation()
         {
             EquationSolver.N = IntervalsX;
             EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
             EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
             EquationSolver.PrepareComputation();
+
+            EquationSolver.SnapshotTimeStep = SnapshotTimeStep;
             FirstActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
             FirstInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
             RaisePropertyChanged(null);
@@ -153,6 +166,9 @@ namespace HE.Gui
             EndMomentT = 10;
             IntervalsX = 100;
             StepsByClickQuantity = 10;
+            SnapshotTimeStep = 0.1;
+            ActivatorTreshold = 13;
+            InhibitorTreshold = 1000;
 
             foreach (InitialHarmonic harmonic in InitialCondition)
             {
@@ -176,6 +192,11 @@ namespace HE.Gui
         {
             LastActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
             LastInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
+            RecreatePlot();
+        }
+
+        private void RecreatePlot()
+        {
             MatrixModel = new PlotModel();
 
             var linearAxis1 = new LinearAxis();
@@ -185,13 +206,15 @@ namespace HE.Gui
             MatrixModel.Axes.Add(linearAxis2);
 
             var matrixSeries1 = new MatrixSeries();
-            matrixSeries1.TresholdValue = 13;
+            matrixSeries1.TresholdValue1 = ActivatorTreshold;
+            matrixSeries1.TresholdValue2 = InhibitorTreshold;
 
             matrixSeries1.Timeline1 = EquationSolver.ActivatorTimeLine;
             matrixSeries1.Timeline2 = EquationSolver.InhibitorTimeLine;
             matrixSeries1.MaxTime = EquationSolver.ActualSnapshotTime;
+            matrixSeries1.Interpolate = InterpolatePlot;
 
-            matrixSeries1.Matrix= To2D(EquationSolver.ActivatorLayer);
+            matrixSeries1.Matrix = To2D(EquationSolver.ActivatorLayer);
             MatrixModel.Series.Add(matrixSeries1);
             RaisePropertyChanged(null);
         }
@@ -221,17 +244,6 @@ namespace HE.Gui
         private void PopulateFirstExample()
         {
             SetTestParameters();
-        }
-
-        private DataView Populate(EquationSolveAnswer answer)
-        {
-            var result = new double[2, answer.Nodes.Length];
-            for (int i = 0; i < answer.Nodes.Length; i++)
-            {
-                result[0, i] = answer.Nodes[i];
-                result[1, i] = answer.LastLayer[i];
-            }
-            return BindingHelper.GetBindable2DArray(result);
         }
     }
 

@@ -11,7 +11,7 @@ namespace HE.Logic
         {
             InittialConditionU1 = new double[InitialConditionComponentsCount];
             InittialConditionU2 = new double[InitialConditionComponentsCount];
-            SnapshotTimeSpan = 0.1;
+            SnapshotTimeStep = 0.1;
         }
 
         public double[] InhibitorLayer { get; set; }
@@ -19,7 +19,7 @@ namespace HE.Logic
 
         public List<double[]> ActivatorTimeLine { get; set; }
         public List<double[]> InhibitorTimeLine { get; set; }
-        public double SnapshotTimeSpan { get; set; }
+        public double SnapshotTimeStep { get; set; }
         public double ActualSnapshotTime { get; private set; }
 
         public double Lambda1 { get; set; }
@@ -50,10 +50,12 @@ namespace HE.Logic
 
         public void ComputeUntilTime()
         {
-            double m = (Time - CurrentTime)/TimeStep;
+            int m = (int) ((Time - CurrentTime)/TimeStep);
+            int iterationsPerSnapshot = CountIterationsPerSnapshot(m);
 
             for (int i = 0; i < m; i++)
             {
+                ConditionalSnapshot(i, iterationsPerSnapshot);
                 SingleStep();
             }
 
@@ -99,11 +101,6 @@ namespace HE.Logic
         {
             double h = Length/N;
             double k = TimeStep;
-            if (CurrentTime >= ActualSnapshotTime + SnapshotTimeSpan)
-            {
-                MakeSnapshot();
-                ActualSnapshotTime += SnapshotTimeSpan;
-            }
 
             for (int i = 1; i < N; i++)
             {
@@ -133,6 +130,7 @@ namespace HE.Logic
             Array.Copy(InhibitorLayer, inhibitorLayerCopy, InhibitorLayer.Length);
             ActivatorTimeLine.Add(activatorLayerCopy);
             InhibitorTimeLine.Add(inhibitorLayerCopy);
+            ActualSnapshotTime += SnapshotTimeStep;
         }
 
         public void AlignTimeStep()
@@ -145,7 +143,6 @@ namespace HE.Logic
         {
             int n = N;
             CurrentTime = 0;
-            ActualSnapshotTime = 0;
             
 
             ActivatorLayer = new double[n + 1];
@@ -165,15 +162,34 @@ namespace HE.Logic
             }
 
             MakeSnapshot();
+            ActualSnapshotTime = 0;
         }
 
         public void MultipleSteps(int stepsByClickQuantity)
         {
+            int iterationsPerSnapshot = CountIterationsPerSnapshot(stepsByClickQuantity);
+
             for (int i = 0; i < stepsByClickQuantity; i++)
             {
+                ConditionalSnapshot(i, iterationsPerSnapshot);
                 SingleStep();
             }
             CurrentTime += stepsByClickQuantity*TimeStep;
+        }
+
+        private int CountIterationsPerSnapshot(int layerQuantity)
+        {
+            var numberOfSnapshots = (CurrentTime + layerQuantity * TimeStep - ActualSnapshotTime) / SnapshotTimeStep;
+            int iterationsPerSnapshot = (int)(layerQuantity / numberOfSnapshots);
+            return iterationsPerSnapshot;
+        }
+
+        private void ConditionalSnapshot(int i, int iterationsPerSnapshot)
+        {
+            if ((i + 1)%iterationsPerSnapshot == 0)
+            {
+                MakeSnapshot();
+            }
         }
     }
 }

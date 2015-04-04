@@ -11,7 +11,7 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="350" />
+                <RowDefinition Height="400" />
                 <RowDefinition Height="50" />
                 <RowDefinition />
             </Grid.RowDefinitions>
@@ -39,22 +39,37 @@
                             <ColumnDefinition Width ="300"/>
                         </Grid.ColumnDefinitions>
                         <oxy:PlotView Grid.Column="0" Grid.RowSpan="2" Width="auto" Model="{Binding MatrixModel}" />
-                        <UniformGrid Grid.Column="1" Grid.Row="0" Columns="2">
-                            <Label>Узлов по X</Label><TextBox></TextBox>
-                            <Label>Шаг по времени</Label><TextBox></TextBox>
-                            <Label>Интерполяция</Label><CheckBox></CheckBox>
-                            <TextBlock TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
-                            <WrapPanel>
-                                <TextBox Width="70"></TextBox>
-                                <Button Width="80">Применить</Button>
-                            </WrapPanel>
-                            
-                            <TextBlock TextWrapping="WrapWithOverflow">Фиксированный масштаб по времени</TextBlock>
-                            <WrapPanel>
+                        <Grid Grid.Column="1" Grid.Row="0" >
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition />
+                                <RowDefinition Height="100"/>
+                                <RowDefinition Height="30"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Column="0" Grid.Row="0">Узлов по X</Label>
+                            <TextBox Grid.Column="1" Grid.Row="0"></TextBox>
+                            <Label Grid.Column="0" Grid.Row="1">Шаг по времени</Label>
+                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SnapshotTimeStep}"></TextBox>
+                            <Label Grid.Column="0" Grid.Row="2">Интерполяция</Label>
+                            <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding InterpolatePlot}"></CheckBox>
+                            <TextBlock  Grid.Column="0" Grid.Row="3" TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
+                            <UniformGrid Columns="2" Grid.Column="1" Grid.Row="3">
+                                <Label>Активатор</Label><TextBox Width="70" Text="{Binding ActivatorTreshold}"></TextBox>
+                                <Label>Ингибитор</Label><TextBox Width="70" Text="{Binding InhibitorTreshold}"></TextBox>
+                                <Label></Label><Button Width="80" Command="{Binding ApplyTresholdsCommand}">Применить</Button>
+                            </UniformGrid>
+
+                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="WrapWithOverflow">Фиксированный масштаб по времени</TextBlock>
+                            <WrapPanel Grid.Column="1" Grid.Row="4">
                                 <TextBox Width="130"></TextBox>
                                 <CheckBox></CheckBox>
                             </WrapPanel>
-                        </UniformGrid>
+                        </Grid>
                         <TextBlock Grid.Column="1" Grid.Row="1"  TextWrapping="WrapWithOverflow">Изменения вступят в силу для нового решения</TextBlock>
                     </Grid>
                 </TabItem>
