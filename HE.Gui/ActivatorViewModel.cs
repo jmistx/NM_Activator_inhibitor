@@ -186,6 +186,11 @@ namespace HE.Gui
 
             var matrixSeries1 = new MatrixSeries();
             matrixSeries1.TresholdValue = 13;
+
+            matrixSeries1.Timeline1 = EquationSolver.ActivatorTimeLine;
+            matrixSeries1.Timeline2 = EquationSolver.InhibitorTimeLine;
+            matrixSeries1.MaxTime = EquationSolver.ActualSnapshotTime;
+
             matrixSeries1.Matrix= To2D(EquationSolver.ActivatorLayer);
             MatrixModel.Series.Add(matrixSeries1);
             RaisePropertyChanged(null);

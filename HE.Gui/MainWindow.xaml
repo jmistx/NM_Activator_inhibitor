@@ -29,7 +29,34 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Графическое представление">
-                    <oxy:PlotView Model="{Binding MatrixModel}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width ="300"/>
+                        </Grid.ColumnDefinitions>
+                        <oxy:PlotView Grid.Column="0" Grid.RowSpan="2" Width="auto" Model="{Binding MatrixModel}" />
+                        <UniformGrid Grid.Column="1" Grid.Row="0" Columns="2">
+                            <Label>Узлов по X</Label><TextBox></TextBox>
+                            <Label>Шаг по времени</Label><TextBox></TextBox>
+                            <Label>Интерполяция</Label><CheckBox></CheckBox>
+                            <TextBlock TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
+                            <WrapPanel>
+                                <TextBox Width="70"></TextBox>
+                                <Button Width="80">Применить</Button>
+                            </WrapPanel>
+                            
+                            <TextBlock TextWrapping="WrapWithOverflow">Фиксированный масштаб по времени</TextBlock>
+                            <WrapPanel>
+                                <TextBox Width="130"></TextBox>
+                                <CheckBox></CheckBox>
+                            </WrapPanel>
+                        </UniformGrid>
+                        <TextBlock Grid.Column="1" Grid.Row="1"  TextWrapping="WrapWithOverflow">Изменения вступят в силу для нового решения</TextBlock>
+                    </Grid>
                 </TabItem>
                 <TabItem Header="Норма разности на слое" />
             </TabControl>
@@ -37,23 +64,23 @@
             <TabControl Grid.Row="2">
                 <TabItem Header="Параметры уравнения">
                     <StackPanel Width="300" HorizontalAlignment="Left">
-                        <Image Width="300" HorizontalAlignment="Left" Grid.Row="0" Grid.Column="0"
-                                   Grid.ColumnSpan="3" Source="res\Eq1.gif" />
+                        <Image Width="300" HorizontalAlignment="Left"
+                               Source="res\Eq1.gif" />
                         <UniformGrid Columns="4">
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="1">λ1</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding Lambda1}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="2">λ2</Label>
-                            <TextBox Grid.Column="1" Grid.Row="2" Text="{Binding Lambda2}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="3">ρ</Label>
-                            <TextBox Grid.Column="1" Grid.Row="3" Text="{Binding Rho}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="4">κ</Label>
-                            <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding Kappa}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="5">γ</Label>
-                            <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding Gamma}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="6">ν</Label>
-                            <TextBox Grid.Column="1" Grid.Row="6" Text="{Binding Nu}" />
-                            <Label Grid.Column="0" FontSize="18" Grid.Row="7">c</Label>
-                            <TextBox Grid.Column="1" Grid.Row="7" Text="{Binding C}" />
+                            <Label FontSize="18">λ1</Label>
+                            <TextBox Text="{Binding Lambda1}" />
+                            <Label FontSize="18">λ2</Label>
+                            <TextBox Text="{Binding Lambda2}" />
+                            <Label FontSize="18">ρ</Label>
+                            <TextBox Text="{Binding Rho}" />
+                            <Label FontSize="18">κ</Label>
+                            <TextBox Text="{Binding Kappa}" />
+                            <Label FontSize="18">γ</Label>
+                            <TextBox Text="{Binding Gamma}" />
+                            <Label FontSize="18">ν</Label>
+                            <TextBox Text="{Binding Nu}" />
+                            <Label FontSize="18">c</Label>
+                            <TextBox Text="{Binding C}" />
                         </UniformGrid>
                     </StackPanel>
 
@@ -83,7 +110,7 @@
                                         <Label FontSize="12">Разбиений по пространству</Label>
                                         <TextBox Text="{Binding IntervalsX}" />
                                     </UniformGrid>
-                                    <Button Command="{Binding PrepareComputationCommand}">Задать шаг сетки по X</Button>
+                                    <Button Command="{Binding PrepareComputationCommand}">Построить новое решение</Button>
                                     <UniformGrid Rows="2" HorizontalAlignment="Left">
                                         <Label FontSize="12">Конечный момент T</Label>
                                         <TextBox Width="150" Text="{Binding EndMomentT}" />

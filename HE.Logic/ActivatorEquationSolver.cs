@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace HE.Logic
 {
@@ -10,10 +11,16 @@ namespace HE.Logic
         {
             InittialConditionU1 = new double[InitialConditionComponentsCount];
             InittialConditionU2 = new double[InitialConditionComponentsCount];
+            SnapshotTimeSpan = 0.1;
         }
 
         public double[] InhibitorLayer { get; set; }
         public double[] ActivatorLayer { get; set; }
+
+        public List<double[]> ActivatorTimeLine { get; set; }
+        public List<double[]> InhibitorTimeLine { get; set; }
+        public double SnapshotTimeSpan { get; set; }
+        public double ActualSnapshotTime { get; private set; }
 
         public double Lambda1 { get; set; }
         public double Lambda2 { get; set; }
@@ -43,7 +50,7 @@ namespace HE.Logic
 
         public void ComputeUntilTime()
         {
-            double m = (Time - CurrentTime) / TimeStep;
+            double m = (Time - CurrentTime)/TimeStep;
 
             for (int i = 0; i < m; i++)
             {
@@ -92,6 +99,11 @@ namespace HE.Logic
         {
             double h = Length/N;
             double k = TimeStep;
+            if (CurrentTime >= ActualSnapshotTime + SnapshotTimeSpan)
+            {
+                MakeSnapshot();
+                ActualSnapshotTime += SnapshotTimeSpan;
+            }
 
             for (int i = 1; i < N; i++)
             {
@@ -113,6 +125,16 @@ namespace HE.Logic
             Swap();
         }
 
+        private void MakeSnapshot()
+        {
+            var activatorLayerCopy = new double[ActivatorLayer.Length];
+            var inhibitorLayerCopy = new double[InhibitorLayer.Length];
+            Array.Copy(ActivatorLayer, activatorLayerCopy, ActivatorLayer.Length);
+            Array.Copy(InhibitorLayer, inhibitorLayerCopy, InhibitorLayer.Length);
+            ActivatorTimeLine.Add(activatorLayerCopy);
+            InhibitorTimeLine.Add(inhibitorLayerCopy);
+        }
+
         public void AlignTimeStep()
         {
             double h = Length/N;
@@ -123,20 +145,26 @@ namespace HE.Logic
         {
             int n = N;
             CurrentTime = 0;
+            ActualSnapshotTime = 0;
+            
 
             ActivatorLayer = new double[n + 1];
             InhibitorLayer = new double[n + 1];
             ActivatorLayerNext = new double[n + 1];
             InhibitorLayerNext = new double[n + 1];
+            ActivatorTimeLine = new List<double[]>();
+            InhibitorTimeLine = new List<double[]>();
 
-            double h = Length / n;
+            double h = Length/n;
 
             for (int i = 0; i < n + 1; i++)
             {
-                double x = i * h;
+                double x = i*h;
                 ActivatorLayer[i] = GetInitValueActivator(x);
                 InhibitorLayer[i] = GetInitValueInhibitor(x);
             }
+
+            MakeSnapshot();
         }
 
         public void MultipleSteps(int stepsByClickQuantity)

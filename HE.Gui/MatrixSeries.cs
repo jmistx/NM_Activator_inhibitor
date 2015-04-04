@@ -99,6 +99,9 @@ namespace ExampleLibrary
         /// </value>
         public double TresholdValue { get; set; }
 
+        public List<double[]> Timeline1 { get; set; }
+        public List<double[]> Timeline2 { get; set; }
+
         /// <summary>
         ///     Gets the point on the series that is nearest the specified point.
         /// </summary>
