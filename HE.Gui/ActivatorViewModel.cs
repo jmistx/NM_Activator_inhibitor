@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Input;
+using System.Windows.Media;
+using ExampleLibrary;
 using HE.Logic;
 using Microsoft.TeamFoundation.MVVM;
 using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 
 namespace HE.Gui
 {
@@ -171,12 +176,34 @@ namespace HE.Gui
         {
             LastActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
             LastInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
+            MatrixModel = new PlotModel();
+
+            var linearAxis1 = new LinearAxis();
+            MatrixModel.Axes.Add(linearAxis1);
+
+            var linearAxis2 = new LinearAxis {Position = AxisPosition.Bottom};
+            MatrixModel.Axes.Add(linearAxis2);
+
+            var matrixSeries1 = new MatrixSeries();
+            matrixSeries1.TresholdValue = 13;
+            matrixSeries1.Matrix= To2D(EquationSolver.ActivatorLayer);
+            MatrixModel.Series.Add(matrixSeries1);
             RaisePropertyChanged(null);
+        }
+
+        private static Double[,] To2D(double[] array)
+        {   
+            var result = new Double[array.Length, 1];
+            for (int i = 0; i < array.Length; i++)
+            {
+                result[i, 0] = array[i];
+            }
+            return result;
         }
 
         private DataView Populate(double[] answer)
         {
-            return BindingHelper.GetBindableArray(answer);
+            return BindingHelper.ArrayToDataView(answer);
         }
 
         private void SingleStep()

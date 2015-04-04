@@ -4,7 +4,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        Title="MainWindow" Height="671.798" Width="677.703"
+        Title="MainWindow" Height="694.798" Width="677.703"
         xmlns:gui="clr-namespace:HE.Gui"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance Type=gui:ActivatorViewModel}">
