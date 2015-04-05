@@ -32,45 +32,61 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
-                            <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-                            <ColumnDefinition Width ="300"/>
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <oxy:PlotView Grid.Column="0" Grid.RowSpan="2" Width="auto" Model="{Binding MatrixModel}" />
+                        <oxy:PlotView Grid.Column="0" Grid.RowSpan="2"  Model="{Binding MatrixModel}" />
                         <Grid Grid.Column="1" Grid.Row="0" >
                             <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                                <RowDefinition />
+                                <RowDefinition Height="20"/>
+                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30"/>
                                 <RowDefinition Height="100"/>
+                                <RowDefinition Height="30"/>
                                 <RowDefinition Height="30"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Column="0" Grid.Row="0">Узлов по X</Label>
-                            <TextBox Grid.Column="1" Grid.Row="0"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="1">Шаг по времени</Label>
-                            <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SnapshotTimeStep}"></TextBox>
-                            <Label Grid.Column="0" Grid.Row="2">Интерполяция</Label>
-                            <CheckBox Grid.Column="1" Grid.Row="2" IsChecked="{Binding InterpolatePlot}"></CheckBox>
-                            <TextBlock  Grid.Column="0" Grid.Row="3" TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
-                            <UniformGrid Columns="2" Grid.Column="1" Grid.Row="3">
-                                <Label>Активатор</Label><TextBox Width="70" Text="{Binding ActivatorTreshold}"></TextBox>
-                                <Label>Ингибитор</Label><TextBox Width="70" Text="{Binding InhibitorTreshold}"></TextBox>
-                                <Label></Label><Button Width="80" Command="{Binding ApplyTresholdsCommand}">Применить</Button>
+                            <TextBlock Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow">Эти изменения вступят в силу для нового решения</TextBlock>
+                            <Grid Grid.ColumnSpan="2" Grid.Column="0" Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Label Grid.Column="0" Grid.Row="0" Padding="0">Узлов по X</Label>
+                                <TextBox Grid.Column="1" Grid.Row="0"></TextBox>
+                                <Label Grid.Column="0" Grid.Row="1" Padding="0">Шаг по времени</Label>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SnapshotTimeStep}"></TextBox>
+                            </Grid>
+                            <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow">Эти настройки можно применить в любой момент</TextBlock>
+
+                            <Label Grid.Column="0" Grid.Row="3" Padding="0">Интерполяция</Label>
+                            <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding InterpolatePlot}" VerticalAlignment="Center"></CheckBox>
+                            <TextBlock  Grid.Column="0" Grid.Row="4" TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
+                            <UniformGrid Columns="2" Grid.Column="1" Grid.Row="4">
+                                <Label>Активатор</Label>
+                                <TextBox Width="70" Text="{Binding ActivatorTreshold}"></TextBox>
+                                <Label>Ингибитор</Label>
+                                <TextBox Width="70" Text="{Binding InhibitorTreshold}"></TextBox>
                             </UniformGrid>
 
-                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="WrapWithOverflow">Фиксированный масштаб по времени</TextBlock>
-                            <WrapPanel Grid.Column="1" Grid.Row="4">
-                                <TextBox Width="130"></TextBox>
-                                <CheckBox></CheckBox>
+                            <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="WrapWithOverflow">Фиксированный масштаб по времени</TextBlock>
+                            <WrapPanel Grid.Column="1" Grid.Row="5">
+                                <TextBox Width="130" Text="{Binding TimeScaleValue}"></TextBox>
+                                <CheckBox IsChecked="{Binding FixedTimeScale}" VerticalAlignment="Center"></CheckBox>
                             </WrapPanel>
+                            <Button Grid.Column="1" Grid.Row="6" Width="80" Command="{Binding ApplyTresholdsCommand}">Применить</Button>
                         </Grid>
-                        <TextBlock Grid.Column="1" Grid.Row="1"  TextWrapping="WrapWithOverflow">Изменения вступят в силу для нового решения</TextBlock>
+
                     </Grid>
                 </TabItem>
                 <TabItem Header="Норма разности на слое" />

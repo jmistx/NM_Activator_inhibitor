@@ -134,6 +134,10 @@ namespace HE.Gui
 
         public bool InterpolatePlot { get; set; }
 
+        public bool FixedTimeScale { get; set; }
+
+        public double TimeScaleValue { get; set; }
+
         private void PrepareComputation()
         {
             EquationSolver.N = IntervalsX;
@@ -211,7 +215,12 @@ namespace HE.Gui
 
             matrixSeries1.Timeline1 = EquationSolver.ActivatorTimeLine;
             matrixSeries1.Timeline2 = EquationSolver.InhibitorTimeLine;
-            matrixSeries1.MaxTime = EquationSolver.ActualSnapshotTime;
+            matrixSeries1.MaxTime =  EquationSolver.ActualSnapshotTime;
+            if (FixedTimeScale)
+            {
+                linearAxis1.Maximum = TimeScaleValue;
+            }
+            
             matrixSeries1.Interpolate = InterpolatePlot;
 
             matrixSeries1.Matrix = To2D(EquationSolver.ActivatorLayer);
