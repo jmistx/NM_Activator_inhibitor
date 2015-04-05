@@ -138,14 +138,18 @@ namespace HE.Gui
 
         public double TimeScaleValue { get; set; }
 
+        public int SnapshotSize { get; set; }
+
         private void PrepareComputation()
         {
             EquationSolver.N = IntervalsX;
             EquationSolver.InittialConditionU1 = InitialCondition.Select(s => s.ActivatorValue).ToArray();
             EquationSolver.InittialConditionU2 = InitialCondition.Select(s => s.InhibitorValue).ToArray();
+            EquationSolver.SnapshotSize = SnapshotSize;
+            EquationSolver.SnapshotTimeStep = SnapshotTimeStep;
+            
             EquationSolver.PrepareComputation();
 
-            EquationSolver.SnapshotTimeStep = SnapshotTimeStep;
             FirstActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
             FirstInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
             RaisePropertyChanged(null);
@@ -173,6 +177,9 @@ namespace HE.Gui
             SnapshotTimeStep = 0.1;
             ActivatorTreshold = 13;
             InhibitorTreshold = 1000;
+            SnapshotSize = 100;
+            TimeScaleValue = 5;
+            FixedTimeScale = false;
 
             foreach (InitialHarmonic harmonic in InitialCondition)
             {
@@ -223,19 +230,8 @@ namespace HE.Gui
             
             matrixSeries1.Interpolate = InterpolatePlot;
 
-            matrixSeries1.Matrix = To2D(EquationSolver.ActivatorLayer);
             MatrixModel.Series.Add(matrixSeries1);
             RaisePropertyChanged(null);
-        }
-
-        private static Double[,] To2D(double[] array)
-        {   
-            var result = new Double[array.Length, 1];
-            for (int i = 0; i < array.Length; i++)
-            {
-                result[i, 0] = array[i];
-            }
-            return result;
         }
 
         private DataView Populate(double[] answer)

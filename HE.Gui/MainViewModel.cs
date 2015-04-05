@@ -50,27 +50,6 @@ namespace HE.Gui
         private void InitMatrixModel()
         {
             MatrixModel = new PlotModel();
-            PlotModel plotModel1 = MatrixModel;
-            var linearAxis1 = new LinearAxis();
-            linearAxis1.EndPosition = 0;
-            linearAxis1.StartPosition = 1;
-            plotModel1.Axes.Add(linearAxis1);
-            var linearAxis2 = new LinearAxis();
-            linearAxis2.Position = AxisPosition.Bottom;
-            plotModel1.Axes.Add(linearAxis2);
-            var matrixSeries1 = new MatrixSeries();
-            matrixSeries1.ShowDiagonal = true;
-            matrixSeries1.Matrix = new Double[3, 3];
-            matrixSeries1.Matrix[0, 0] = 1;
-            matrixSeries1.Matrix[0, 1] = 0;
-            matrixSeries1.Matrix[0, 2] = 0;
-            matrixSeries1.Matrix[1, 0] = 0;
-            matrixSeries1.Matrix[1, 1] = 2;
-            matrixSeries1.Matrix[1, 2] = 0;
-            matrixSeries1.Matrix[2, 0] = 0;
-            matrixSeries1.Matrix[2, 1] = 0;
-            matrixSeries1.Matrix[2, 2] = 3;
-            plotModel1.Series.Add(matrixSeries1);
         }
 
         private void PopulateSecondExample()

@@ -63,7 +63,7 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Grid.Column="0" Grid.Row="0" Padding="0">Узлов по X</Label>
-                                <TextBox Grid.Column="1" Grid.Row="0"></TextBox>
+                                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SnapshotSize}"></TextBox>
                                 <Label Grid.Column="0" Grid.Row="1" Padding="0">Шаг по времени</Label>
                                 <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SnapshotTimeStep}"></TextBox>
                             </Grid>
@@ -90,6 +90,9 @@
                     </Grid>
                 </TabItem>
                 <TabItem Header="Норма разности на слое" />
+                <TabItem Header="Котик">
+                    <Image Source="res/Cute.jpg"></Image>
+                </TabItem>
             </TabControl>
 
             <TabControl Grid.Row="2">

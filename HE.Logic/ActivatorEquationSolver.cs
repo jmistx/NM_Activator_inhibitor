@@ -47,6 +47,7 @@ namespace HE.Logic
 
         public double[] InhibitorLayerNext { get; set; }
         public double CurrentTime { get; set; }
+        public int SnapshotSize { get; set; }
 
         public void ComputeUntilTime()
         {
@@ -124,13 +125,25 @@ namespace HE.Logic
 
         private void MakeSnapshot()
         {
-            var activatorLayerCopy = new double[ActivatorLayer.Length];
-            var inhibitorLayerCopy = new double[InhibitorLayer.Length];
-            Array.Copy(ActivatorLayer, activatorLayerCopy, ActivatorLayer.Length);
-            Array.Copy(InhibitorLayer, inhibitorLayerCopy, InhibitorLayer.Length);
+            var activatorLayerCopy = CopyArrayToSnapshot(ActivatorLayer);
+            var inhibitorLayerCopy = CopyArrayToSnapshot(InhibitorLayer);
+
             ActivatorTimeLine.Add(activatorLayerCopy);
             InhibitorTimeLine.Add(inhibitorLayerCopy);
             ActualSnapshotTime += SnapshotTimeStep;
+        }
+
+        private double[] CopyArrayToSnapshot(double[] layer)
+        {
+            var layerCopy = new double[SnapshotSize];
+            var scale =  (double)layer.Length / (double)SnapshotSize;
+
+            for (int i = 0; i < SnapshotSize; i++)
+            {
+                layerCopy[i] = layer[(int)(i * scale)];
+            }
+
+            return layerCopy;
         }
 
         public void AlignTimeStep()

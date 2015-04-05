@@ -18,7 +18,6 @@ namespace ExampleLibrary
         /// <summary>
         ///     The matrix
         /// </summary>
-        private double[,] matrix;
 
         private OxyImage timeline2Image;
 
@@ -47,20 +46,6 @@ namespace ExampleLibrary
         public double MaxCoordinate { get; set; }
 
         public double MaxTime { get; set; }
-
-        /// <summary>
-        ///     Gets or sets the matrix.
-        /// </summary>
-        public double[,] Matrix
-        {
-            get { return matrix; }
-
-            set
-            {
-                timeline1Image = null;
-                matrix = value;
-            }
-        }
 
         /// <summary>
         ///     Gets or sets a value indicating whether to show the diagonal.
@@ -121,19 +106,19 @@ namespace ExampleLibrary
             var i = (int) dp.Y;
             var j = (int) dp.X;
 
-            if (i >= 0 && i < matrix.GetLength(0) && j >= 0 && j < matrix.GetLength(1))
-            {
-                double value = matrix[i, j];
-                string text = StringHelper.Format(
-                    ActualCulture,
-                    TrackerFormatString,
-                    null,
-                    Title,
-                    i,
-                    j,
-                    value);
-                return new TrackerHitResult(this, dp, point, null, -1, text);
-            }
+//            if (i >= 0 && i < matrix.GetLength(0) && j >= 0 && j < matrix.GetLength(1))
+//            {
+//                double value = matrix[i, j];
+//                string text = StringHelper.Format(
+//                    ActualCulture,
+//                    TrackerFormatString,
+//                    null,
+//                    Title,
+//                    i,
+//                    j,
+//                    value);
+//                return new TrackerHitResult(this, dp, point, null, -1, text);
+//            }
 
             return null;
         }
@@ -232,7 +217,7 @@ namespace ExampleLibrary
         protected override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
-            if (Matrix == null)
+            if (Timeline1 == null || Timeline2 == null)
             {
                 return;
             }
