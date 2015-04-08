@@ -48,6 +48,7 @@ namespace HE.Logic
         public double[] InhibitorLayerNext { get; set; }
         public double CurrentTime { get; set; }
         public int SnapshotSize { get; set; }
+        public double LastLayerDifference { get; set; }
 
         public void ComputeUntilTime()
         {
@@ -120,7 +121,19 @@ namespace HE.Logic
             InhibitorLayerNext[0] = InhibitorLayerNext[1];
             InhibitorLayerNext[N] = InhibitorLayerNext[N - 1];
 
+            LastLayerDifference = ComputeDifference(ActivatorLayer, ActivatorLayerNext);
+
             Swap();
+        }
+
+        private double ComputeDifference(double[] activatorLayer, double[] activatorLayerNext)
+        {
+            double result = 0;
+            for (int i = 1; i < activatorLayer.Length - 1; i++)
+            {
+                result = Math.Max(result, Math.Abs(activatorLayer[i] - activatorLayerNext[i]));
+            }
+            return result;
         }
 
         private void MakeSnapshot()

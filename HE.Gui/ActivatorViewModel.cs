@@ -140,6 +140,11 @@ namespace HE.Gui
 
         public int SnapshotSize { get; set; }
 
+        public double LastLayerDifference
+        {
+            get { return EquationSolver.LastLayerDifference; }
+        }
+
         private void PrepareComputation()
         {
             EquationSolver.N = IntervalsX;

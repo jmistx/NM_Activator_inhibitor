@@ -89,7 +89,12 @@
 
                     </Grid>
                 </TabItem>
-                <TabItem Header="Норма разности на слое" />
+                <TabItem Header="Норма разности на слое" >
+                    <WrapPanel>
+                        <Label>Норма разности на последнем слое: </Label>
+                        <Label Content="{Binding LastLayerDifference}"></Label>
+                    </WrapPanel>
+                </TabItem>
                 <TabItem Header="Котик">
                     <Image Source="res/Cute.jpg"></Image>
                 </TabItem>
