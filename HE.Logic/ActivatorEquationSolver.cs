@@ -19,6 +19,9 @@ namespace HE.Logic
 
         public List<double[]> ActivatorTimeLine { get; set; }
         public List<double[]> InhibitorTimeLine { get; set; }
+        public double[] LastActivatorLayerWithLag { get; set; }
+        public double[] LastInhibitorLayerWithLag { get; set; }
+        public int LagSize { get; set; }
         public double SnapshotTimeStep { get; set; }
         public double ActualSnapshotTime { get; private set; }
 
@@ -48,21 +51,7 @@ namespace HE.Logic
         public double[] InhibitorLayerNext { get; set; }
         public double CurrentTime { get; set; }
         public int SnapshotSize { get; set; }
-        public double LastLayerDifference { get; set; }
-
-        public void ComputeUntilTime()
-        {
-            int m = (int) ((Time - CurrentTime)/TimeStep);
-            int iterationsPerSnapshot = CountIterationsPerSnapshot(m);
-
-            for (int i = 0; i < m; i++)
-            {
-                ConditionalSnapshot(i, iterationsPerSnapshot);
-                SingleStep();
-            }
-
-            CurrentTime += m*TimeStep;
-        }
+        public double LastActivatorLayerDifference { get; set; }
 
         private void Swap()
         {
@@ -121,17 +110,20 @@ namespace HE.Logic
             InhibitorLayerNext[0] = InhibitorLayerNext[1];
             InhibitorLayerNext[N] = InhibitorLayerNext[N - 1];
 
-            LastLayerDifference = ComputeDifference(ActivatorLayer, ActivatorLayerNext);
+            LastActivatorLayerDifference = ComputeDifference(ActivatorLayer, ActivatorLayerNext);
+            LastInhibitorLayerDifference = ComputeDifference(InhibitorLayer, InhibitorLayerNext);
 
             Swap();
         }
 
-        private double ComputeDifference(double[] activatorLayer, double[] activatorLayerNext)
+        public double LastInhibitorLayerDifference { get; set; }
+
+        private double ComputeDifference(double[] layer, double[] nextLayer)
         {
             double result = 0;
-            for (int i = 1; i < activatorLayer.Length - 1; i++)
+            for (int i = 1; i < layer.Length - 1; i++)
             {
-                result = Math.Max(result, Math.Abs(activatorLayer[i] - activatorLayerNext[i]));
+                result = Math.Max(result, Math.Abs(layer[i] - nextLayer[i]));
             }
             return result;
         }
@@ -173,6 +165,8 @@ namespace HE.Logic
 
             ActivatorLayer = new double[n + 1];
             InhibitorLayer = new double[n + 1];
+            LastActivatorLayerWithLag = new double[n + 1];
+            LastInhibitorLayerWithLag = new double[n + 1];
             ActivatorLayerNext = new double[n + 1];
             InhibitorLayerNext = new double[n + 1];
             ActivatorTimeLine = new List<double[]>();
@@ -193,14 +187,45 @@ namespace HE.Logic
 
         public void MultipleSteps(int stepsByClickQuantity)
         {
+             
             int iterationsPerSnapshot = CountIterationsPerSnapshot(stepsByClickQuantity);
-
-            for (int i = 0; i < stepsByClickQuantity; i++)
+            if (stepsByClickQuantity < LagSize)
             {
-                ConditionalSnapshot(i, iterationsPerSnapshot);
-                SingleStep();
+                for (int i = 0; i < stepsByClickQuantity; i++)
+                {
+                    ConditionalSnapshot(i, iterationsPerSnapshot);
+                    SingleStep();
+                }
+            }
+            else
+            {
+                for (int i = 0; i < stepsByClickQuantity - LagSize; i++)
+                {
+                    ConditionalSnapshot(i, iterationsPerSnapshot);
+                    SingleStep();
+                }
+                Array.Copy(ActivatorLayer, LastActivatorLayerWithLag, ActivatorLayer.Length);
+                Array.Copy(InhibitorLayer, LastInhibitorLayerWithLag, InhibitorLayer.Length);
+                for (int i = stepsByClickQuantity - LagSize; i < stepsByClickQuantity; i++)
+                {
+                    ConditionalSnapshot(i, iterationsPerSnapshot);
+                    SingleStep();
+                }
+                ActivatorDifferenceWithLag = ComputeDifference(ActivatorLayer, LastActivatorLayerWithLag);
+                InhibitorDifferenceWithLag = ComputeDifference(InhibitorLayer, LastInhibitorLayerWithLag);  
+
             }
             CurrentTime += stepsByClickQuantity*TimeStep;
+        }
+
+        public double InhibitorDifferenceWithLag { get; set; }
+
+        public double ActivatorDifferenceWithLag { get; set; }
+
+        public void ComputeUntilTime()
+        {
+            int m = (int)((Time - CurrentTime) / TimeStep);
+            MultipleSteps(m);
         }
 
         private int CountIterationsPerSnapshot(int layerQuantity)

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using ExampleLibrary;
@@ -19,10 +21,12 @@ namespace HE.Gui
         {
             CalculateCommand = new RelayCommand(ComputeUntilTime);
             PopulateFirstExampleCommand = new RelayCommand(PopulateFirstExample);
+            ApplyLagSizeCommand = new RelayCommand(ApplyLagSize);
             SingleStepCommand = new RelayCommand(SingleStep);
             SetTimeStepCommand = new RelayCommand(SetTimeStep);
             PrepareComputationCommand = new RelayCommand(PrepareComputation);
-            InitialCondition = new List<InitialHarmonic>();
+            //InitialCondition = new List<InitialHarmonic>();
+            InitialCondition = new ObservableCollection<InitialHarmonic>();
             EquationSolver = new ActivatorEquationSolver();
             ApplyTresholdsCommand = new RelayCommand(RecreatePlot);
 
@@ -99,7 +103,8 @@ namespace HE.Gui
         public DataView LastActivatorLayerView { get; set; }
         public DataView LastInhibitorLayerView { get; set; }
 
-        public List<InitialHarmonic> InitialCondition { get; set; }
+        //public List<InitialHarmonic> InitialCondition { get; set; }
+        public ObservableCollection<InitialHarmonic> InitialCondition { get; set; }
 
         public ICommand CalculateCommand { get; set; }
 
@@ -140,10 +145,16 @@ namespace HE.Gui
 
         public int SnapshotSize { get; set; }
 
-        public double LastLayerDifference
-        {
-            get { return EquationSolver.LastLayerDifference; }
-        }
+        public int LagSize { get; set; }
+
+        public double LastActivatorLayerDifferenceWithLag { get; set; }
+        public double LastInhibitorLayerDifferenceWithLag { get; set; }
+
+        public ICommand ApplyLagSizeCommand { get; set; }
+
+        public double LastActivatorLayerDifference { get { return EquationSolver.LastActivatorLayerDifference; } }
+        public double LastInhibitorLayerDifference { get { return EquationSolver.LastInhibitorLayerDifference; } }
+
 
         private void PrepareComputation()
         {
@@ -194,6 +205,7 @@ namespace HE.Gui
 
             InitialCondition[0].ActivatorValue = 1;
             InitialCondition[0].InhibitorValue = 0.5;
+            CollectionViewSource.GetDefaultView(InitialCondition).Refresh();
 
             RaisePropertyChanged(null);
         }
@@ -208,7 +220,17 @@ namespace HE.Gui
         {
             LastActivatorLayerView = Populate(EquationSolver.ActivatorLayer);
             LastInhibitorLayerView = Populate(EquationSolver.InhibitorLayer);
+            LastActivatorLayerDifferenceWithLag = EquationSolver.ActivatorDifferenceWithLag;
+            LastInhibitorLayerDifferenceWithLag = EquationSolver.InhibitorDifferenceWithLag;
             RecreatePlot();
+        }
+
+        private void ApplyLagSize()
+        {
+            EquationSolver.LagSize = LagSize;
+            LastActivatorLayerDifferenceWithLag = -1;
+            LastInhibitorLayerDifferenceWithLag = -1;
+            RaisePropertyChanged(null);
         }
 
         private void RecreatePlot()

@@ -37,16 +37,16 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <oxy:PlotView Grid.Column="0" Grid.RowSpan="2"  Model="{Binding MatrixModel}" />
-                        <Grid Grid.Column="1" Grid.Row="0" >
+                        <oxy:PlotView Grid.Column="0" Grid.RowSpan="2" Model="{Binding MatrixModel}" />
+                        <Grid Grid.Column="1" Grid.Row="0">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="20"/>
-                                <RowDefinition Height="60"/>
+                                <RowDefinition Height="20" />
+                                <RowDefinition Height="60" />
                                 <RowDefinition Height="30" />
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="100"/>
-                                <RowDefinition Height="30"/>
-                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="100" />
+                                <RowDefinition Height="30" />
+                                <RowDefinition Height="30" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition />
@@ -63,40 +63,69 @@
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Label Grid.Column="0" Grid.Row="0" Padding="0">Узлов по X</Label>
-                                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SnapshotSize}"></TextBox>
+                                <TextBox Grid.Column="1" Grid.Row="0" Text="{Binding SnapshotSize}" />
                                 <Label Grid.Column="0" Grid.Row="1" Padding="0">Шаг по времени</Label>
-                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SnapshotTimeStep}"></TextBox>
+                                <TextBox Grid.Column="1" Grid.Row="1" Text="{Binding SnapshotTimeStep}" />
                             </Grid>
                             <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow">Эти настройки можно применить в любой момент</TextBlock>
 
                             <Label Grid.Column="0" Grid.Row="3" Padding="0">Интерполяция</Label>
-                            <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding InterpolatePlot}" VerticalAlignment="Center"></CheckBox>
-                            <TextBlock  Grid.Column="0" Grid.Row="4" TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
+                            <CheckBox Grid.Column="1" Grid.Row="3" IsChecked="{Binding InterpolatePlot}"
+                                      VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="0" Grid.Row="4" TextWrapping="WrapWithOverflow">Максимальное по яркости значение</TextBlock>
                             <UniformGrid Columns="2" Grid.Column="1" Grid.Row="4">
                                 <Label>Активатор</Label>
-                                <TextBox Width="70" Text="{Binding ActivatorTreshold}"></TextBox>
+                                <TextBox Width="70" Text="{Binding ActivatorTreshold}" />
                                 <Label>Ингибитор</Label>
-                                <TextBox Width="70" Text="{Binding InhibitorTreshold}"></TextBox>
+                                <TextBox Width="70" Text="{Binding InhibitorTreshold}" />
                             </UniformGrid>
 
                             <TextBlock Grid.Column="0" Grid.Row="5" TextWrapping="WrapWithOverflow">Фиксированный масштаб по времени</TextBlock>
                             <WrapPanel Grid.Column="1" Grid.Row="5">
-                                <TextBox Width="130" Text="{Binding TimeScaleValue}"></TextBox>
-                                <CheckBox IsChecked="{Binding FixedTimeScale}" VerticalAlignment="Center"></CheckBox>
+                                <TextBox Width="130" Text="{Binding TimeScaleValue}" />
+                                <CheckBox IsChecked="{Binding FixedTimeScale}" VerticalAlignment="Center" />
                             </WrapPanel>
                             <Button Grid.Column="1" Grid.Row="6" Width="80" Command="{Binding ApplyTresholdsCommand}">Применить</Button>
                         </Grid>
 
                     </Grid>
                 </TabItem>
-                <TabItem Header="Норма разности на слое" >
-                    <WrapPanel>
-                        <Label>Норма разности на последнем слое: </Label>
-                        <Label Content="{Binding LastLayerDifference}"></Label>
-                    </WrapPanel>
+                <TabItem Header="Норма разности на слое">
+                    <StackPanel>
+                        <WrapPanel>
+                            <Label>Норма разности на последнем слое:</Label>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <Label>Активатор:</Label>
+                            <Label Content="{Binding LastActivatorLayerDifference}" />
+                        </WrapPanel>
+                        <WrapPanel>
+                            <Label>Ингибитор:</Label>
+                            <Label Content="{Binding LastInhibitorLayerDifference}" />
+                        </WrapPanel>
+                        <Label>Норма разности с лагом </Label>
+                        <WrapPanel>
+                            <Label>Размер лага:</Label>
+                            <TextBox Text="{Binding LagSize}" Width="100"></TextBox>
+                        </WrapPanel>
+                        <Button HorizontalAlignment="Left"  Width="200" Command="{Binding ApplyLagSizeCommand}">Изменить размер лага</Button>
+                        <WrapPanel>
+                            <Label>Норма разности с лагом</Label>
+                            <Label Content="{Binding LagSize}"></Label>
+                            <Label>:</Label>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <Label>Активатор: </Label>
+                            <Label Content="{Binding LastActivatorLayerDifferenceWithLag}"></Label>
+                        </WrapPanel>
+                        <WrapPanel>
+                            <Label>Ингибитор:</Label>
+                            <Label Content="{Binding LastInhibitorLayerDifferenceWithLag}"></Label>
+                        </WrapPanel>
+                    </StackPanel>
                 </TabItem>
                 <TabItem Header="Котик">
-                    <Image Source="res/Cute.jpg"></Image>
+                    <Image Source="res/Cute.jpg" />
                 </TabItem>
             </TabControl>
 
