@@ -8,3 +8,5 @@ If you somewhy interested my codestyle, I advise to start from tests.
 ```
 
 The most interesting part here is tests on convergence order. It is like meta correctness tests. They are here because the application should not only get correct numbers but do it for a small number of iterations.
+
+![screenshot](./screenshot.png)
